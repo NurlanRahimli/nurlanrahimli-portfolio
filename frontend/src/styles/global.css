@@ -1,0 +1,383 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
+:root {
+  font-family:
+    "Manrope", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  color: #f4f4f5;
+  background: #09090b;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #09090b;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.portfolio-shell {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(161, 197, 105, 0.13), transparent 28%),
+    radial-gradient(circle at 85% 85%, rgba(161, 197, 105, 0.08), transparent 30%),
+    #09090b;
+}
+
+.animated-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.background-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(90px);
+  opacity: 0.28;
+}
+
+.background-orb-one {
+  width: 420px;
+  height: 420px;
+  top: -130px;
+  left: -80px;
+  background: rgba(161, 197, 105, 0.4);
+}
+
+.background-orb-two {
+  width: 520px;
+  height: 520px;
+  right: -180px;
+  bottom: -180px;
+  background: rgba(161, 197, 105, 0.24);
+}
+
+.background-orb-three {
+  width: 300px;
+  height: 300px;
+  top: 45%;
+  left: 55%;
+  background: rgba(161, 197, 105, 0.16);
+}
+
+.portfolio-interface {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 92px 330px minmax(0, 1fr);
+  gap: 20px;
+  width: min(1500px, calc(100% - 48px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 40px 0;
+  align-items: center;
+}
+
+.side-navigation {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  background: rgba(24, 24, 27, 0.68);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(24px);
+}
+
+.navigation-item {
+  display: flex;
+  min-height: 82px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 12px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(244, 244, 245, 0.56);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.navigation-item:last-child {
+  border-bottom: 0;
+}
+
+.navigation-item:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.navigation-item-active {
+  color: #A1C569;
+  background: rgba(161, 197, 105, 0.08);
+}
+
+.profile-card,
+.portfolio-book {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(24, 24, 27, 0.72);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(24px);
+}
+
+.profile-card {
+  overflow: hidden;
+  border-radius: 28px;
+}
+
+.profile-image-placeholder {
+  display: grid;
+  min-height: 330px;
+  place-items: center;
+  background:
+    linear-gradient(145deg, rgba(39, 39, 42, 0.35), rgba(9, 9, 11, 0.9)),
+    radial-gradient(circle at 50% 25%, rgba(161, 197, 105, 0.2), transparent 45%);
+}
+
+.profile-image-placeholder span {
+  display: grid;
+  width: 112px;
+  height: 112px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 2rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+}
+
+.profile-card-content {
+  padding: 28px;
+  text-align: center;
+}
+
+.profile-eyebrow {
+  margin: 0 0 8px;
+  color: rgba(244, 244, 245, 0.48);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.profile-card h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  letter-spacing: -0.045em;
+}
+
+.profile-role {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 11px 0 0;
+  color: rgba(244, 244, 245, 0.7);
+  font-size: 0.92rem;
+}
+
+.profile-description {
+  margin: 20px 0;
+  color: rgba(244, 244, 245, 0.52);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.profile-socials {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.profile-socials a {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: rgba(244, 244, 245, 0.72);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.profile-socials a:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+.profile-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.profile-action {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 13px;
+  background: #A1C569;
+  color: #10130c;
+  font-size: 0.84rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.profile-action-muted {
+  background: rgba(255, 255, 255, 0.035);
+  color: #f4f4f5;
+}
+
+.portfolio-book {
+  position: relative;
+  min-height: 680px;
+  overflow: hidden;
+  border-radius: 28px;
+  perspective: 1800px;
+}
+
+.book-page {
+  min-height: 680px;
+  padding: clamp(36px, 5vw, 72px);
+}
+
+.portfolio-page {
+  max-width: 820px;
+}
+
+.page-kicker {
+  margin: 0 0 18px;
+  color: #A1C569;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.portfolio-page h1 {
+  margin: 0;
+  font-size: clamp(3.8rem, 8vw, 7.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.075em;
+}
+
+.page-placeholder {
+  max-width: 600px;
+  margin: 36px 0 0;
+  color: rgba(244, 244, 245, 0.56);
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  line-height: 1.8;
+}
+
+@media (max-width: 1100px) {
+  .portfolio-interface {
+    grid-template-columns: 82px minmax(250px, 300px) minmax(0, 1fr);
+    width: min(100% - 30px, 1200px);
+    gap: 14px;
+  }
+}
+
+@media (max-width: 820px) {
+  .portfolio-shell {
+    overflow: visible;
+  }
+
+  .portfolio-interface {
+    display: flex;
+    width: min(100% - 28px, 680px);
+    flex-direction: column;
+    padding: 20px 0 100px;
+  }
+
+  .side-navigation {
+    position: fixed;
+    right: 14px;
+    bottom: 14px;
+    left: 14px;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-radius: 18px;
+  }
+
+  .navigation-item {
+    min-height: 66px;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 0;
+  }
+
+  .navigation-item:last-child {
+    border-right: 0;
+  }
+
+  .profile-card,
+  .portfolio-book {
+    width: 100%;
+  }
+
+  .profile-image-placeholder {
+    min-height: 250px;
+  }
+
+  .portfolio-book,
+  .book-page {
+    min-height: 560px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
