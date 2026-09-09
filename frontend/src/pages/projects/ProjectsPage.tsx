@@ -1,14 +1,12 @@
+import { PageReveal } from '../../components/book/PageReveal'
+
 export function ProjectsPage() {
   return (
-    <section className="portfolio-page">
-      <p className="page-kicker">03</p>
-
-      <h1>Projects</h1>
-
+    <PageReveal number="03" title="Projects">
       <p className="page-placeholder">
-        Featured engineering work, project filters, screenshots, case studies,
-        demos, and source links will live here.
+        A collection of full-stack, AI, machine-learning, and production
+        projects with screenshots, architecture, demos, and engineering details.
       </p>
-    </section>
+    </PageReveal>
   )
 }

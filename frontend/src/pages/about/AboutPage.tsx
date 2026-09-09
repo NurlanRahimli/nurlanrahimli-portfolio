@@ -1,14 +1,13 @@
+import { PageReveal } from '../../components/book/PageReveal'
+
 export function AboutPage() {
   return (
-    <section className="portfolio-page">
-      <p className="page-kicker">01</p>
-
-      <h1>About</h1>
-
+    <PageReveal number="01" title="About">
       <p className="page-placeholder">
-        This page will introduce who I am, what I build, and the technologies I
-        work with.
+        I build modern full-stack and AI-powered products, combining thoughtful
+        frontend experiences with reliable backend systems and intelligent
+        features.
       </p>
-    </section>
+    </PageReveal>
   )
 }

@@ -1,14 +1,12 @@
+import { PageReveal } from '../../components/book/PageReveal'
+
 export function ResumePage() {
   return (
-    <section className="portfolio-page">
-      <p className="page-kicker">02</p>
-
-      <h1>Resume</h1>
-
+    <PageReveal number="02" title="Resume">
       <p className="page-placeholder">
-        Experience, education, certifications, skills, and resume download will
-        live here.
+        Experience, education, certifications, technical skills, and my
+        downloadable resume will live here.
       </p>
-    </section>
+    </PageReveal>
   )
 }
