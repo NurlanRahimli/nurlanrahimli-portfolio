@@ -381,3 +381,401 @@ a {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* =========================
+   3D BOOK PAGE TURN
+========================= */
+
+.portfolio-book {
+  isolation: isolate;
+}
+
+.book-stage {
+  position: relative;
+  min-height: 680px;
+  perspective: 1800px;
+  transform-style: preserve-3d;
+}
+
+.book-page-under {
+  position: relative;
+  z-index: 1;
+}
+
+.book-turning-page {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+.book-turning-page-backward {
+  transform-origin: right center;
+}
+
+.book-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 28px;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.book-face-front {
+  background: rgba(24, 24, 27, 0.98);
+  box-shadow:
+    0 18px 55px rgba(0, 0, 0, 0.42),
+    inset -18px 0 34px rgba(0, 0, 0, 0.13);
+}
+
+.book-face-back {
+  transform: rotateY(180deg);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(161, 197, 105, 0.045),
+      rgba(24, 24, 27, 0.99) 13%
+    );
+  box-shadow:
+    inset 18px 0 34px rgba(0, 0, 0, 0.18),
+    0 18px 55px rgba(0, 0, 0, 0.28);
+}
+
+.book-page-back-content {
+  transform: scaleX(-1);
+  opacity: 0.97;
+}
+
+.book-turning-page-forward {
+  animation: turn-page-forward 850ms cubic-bezier(0.7, 0, 0.2, 1) forwards;
+}
+
+.book-turning-page-backward {
+  animation: turn-page-backward 850ms cubic-bezier(0.7, 0, 0.2, 1) forwards;
+}
+
+.portfolio-book-turning-forward::after,
+.portfolio-book-turning-backward::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: 28px;
+  pointer-events: none;
+  animation: page-light-shift 850ms ease both;
+}
+
+.portfolio-book-turning-forward::after {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.22) 45%,
+      transparent 78%
+    );
+}
+
+.portfolio-book-turning-backward::after {
+  background:
+    linear-gradient(
+      270deg,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.22) 45%,
+      transparent 78%
+    );
+}
+
+.book-turning-page::after {
+  content: "";
+  position: absolute;
+  top: 3%;
+  bottom: 3%;
+  width: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.07),
+    rgba(161, 197, 105, 0.08),
+    rgba(0, 0, 0, 0.22)
+  );
+  filter: blur(0.4px);
+  opacity: 0.8;
+}
+
+.book-turning-page-forward::after {
+  right: -2px;
+}
+
+.book-turning-page-backward::after {
+  left: -2px;
+}
+
+@keyframes turn-page-forward {
+  0% {
+    transform: rotateY(0deg) translateZ(0);
+    filter: brightness(1);
+  }
+
+  28% {
+    transform: rotateY(-42deg) translateZ(18px);
+    filter: brightness(0.97);
+  }
+
+  62% {
+    transform: rotateY(-118deg) translateZ(10px);
+    filter: brightness(0.9);
+  }
+
+  100% {
+    transform: rotateY(-180deg) translateZ(0);
+    filter: brightness(0.84);
+  }
+}
+
+@keyframes turn-page-backward {
+  0% {
+    transform: rotateY(0deg) translateZ(0);
+    filter: brightness(1);
+  }
+
+  28% {
+    transform: rotateY(42deg) translateZ(18px);
+    filter: brightness(0.97);
+  }
+
+  62% {
+    transform: rotateY(118deg) translateZ(10px);
+    filter: brightness(0.9);
+  }
+
+  100% {
+    transform: rotateY(180deg) translateZ(0);
+    filter: brightness(0.84);
+  }
+}
+
+@keyframes page-light-shift {
+  0% {
+    opacity: 0;
+  }
+
+  35% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 820px) {
+  .book-stage {
+    min-height: 560px;
+    perspective: 1200px;
+  }
+
+  .book-turning-page-forward {
+    animation-duration: 620ms;
+  }
+
+  .book-turning-page-backward {
+    animation-duration: 620ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book-turning-page-forward,
+  .book-turning-page-backward,
+  .portfolio-book-turning-forward::after,
+  .portfolio-book-turning-backward::after {
+    animation: none !important;
+  }
+}
+
+/* AnimatePresence-driven page layer */
+
+.book-motion-page {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.book-motion-page:last-child {
+  z-index: 4;
+}
+
+.book-motion-page .book-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.book-motion-page .book-face-back {
+  transform: rotateY(180deg);
+}
+
+.book-page-back-surface {
+  position: relative;
+  min-height: 680px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(161, 197, 105, 0.045),
+      rgba(24, 24, 27, 0.99) 14%,
+      rgba(24, 24, 27, 0.99)
+    );
+}
+
+.page-back-texture {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.018),
+      transparent 18%
+    );
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+@media (max-width: 820px) {
+  .book-page-back-surface {
+    min-height: 560px;
+  }
+}
+
+/* Stronger physical page-turn visibility */
+
+.book-stage {
+  overflow: visible;
+  perspective: 1900px;
+  perspective-origin: 50% 50%;
+}
+
+.book-motion-page {
+  transform-style: preserve-3d;
+  transform: translateZ(0);
+}
+
+.book-motion-page .book-face-front,
+.book-motion-page .book-face-back {
+  transform-style: preserve-3d;
+}
+
+.book-motion-page .book-face-front {
+  box-shadow:
+    0 22px 55px rgba(0, 0, 0, 0.32),
+    inset -14px 0 28px rgba(0, 0, 0, 0.12);
+}
+
+.book-motion-page .book-face-back {
+  transform: rotateY(180deg);
+  box-shadow:
+    inset 14px 0 34px rgba(0, 0, 0, 0.22),
+    0 22px 55px rgba(0, 0, 0, 0.28);
+}
+
+.book-motion-page::after {
+  content: "";
+  position: absolute;
+  top: 2%;
+  right: -2px;
+  bottom: 2%;
+  width: 5px;
+  z-index: 30;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(161, 197, 105, 0.16),
+    rgba(0, 0, 0, 0.34)
+  );
+  box-shadow: 2px 0 9px rgba(0, 0, 0, 0.24);
+  pointer-events: none;
+}
+
+/* =========================
+   PAGE CONTENT REVEALS
+========================= */
+
+.portfolio-page {
+  position: relative;
+  min-height: 100%;
+}
+
+.page-kicker-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.page-kicker-wrap::after {
+  content: "";
+  width: 42px;
+  height: 1px;
+  background: rgba(161, 197, 105, 0.55);
+}
+
+.page-kicker {
+  color: #a1c569;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.page-title-mask {
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.page-title-mask h1 {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(3rem, 5.5vw, 5.8rem);
+  font-weight: 800;
+  line-height: 0.94;
+  letter-spacing: -0.055em;
+  will-change: transform;
+}
+
+.page-reveal-content {
+  max-width: 680px;
+  will-change: transform, opacity;
+}
+
+.page-placeholder {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.64);
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+@media (max-width: 820px) {
+  .page-title-mask {
+    margin-bottom: 18px;
+  }
+
+  .page-title-mask h1 {
+    font-size: clamp(2.6rem, 13vw, 4rem);
+  }
+
+  .page-placeholder {
+    line-height: 1.65;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-title-mask h1,
+  .page-reveal-content,
+  .page-kicker-wrap {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}

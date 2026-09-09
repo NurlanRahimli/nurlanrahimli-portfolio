@@ -1,13 +1,12 @@
+import { PageReveal } from '../../components/book/PageReveal'
+
 export function ContactPage() {
   return (
-    <section className="portfolio-page">
-      <p className="page-kicker">04</p>
-
-      <h1>Contact</h1>
-
+    <PageReveal number="04" title="Contact">
       <p className="page-placeholder">
-        Contact information and the portfolio contact form will live here.
+        Interested in working together? This page will include my contact
+        information, social profiles, and direct message form.
       </p>
-    </section>
+    </PageReveal>
   )
 }
