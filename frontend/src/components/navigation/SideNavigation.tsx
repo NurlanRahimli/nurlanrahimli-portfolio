@@ -1,9 +1,13 @@
 import {
   BriefcaseBusiness,
-  FolderKanban,
-  Mail,
+  FileText,
+  Menu,
+  Moon,
+  Sun,
   UserRound,
+  Mail,
 } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 const navigationItems = [
@@ -15,12 +19,12 @@ const navigationItems = [
   {
     to: '/resume',
     label: 'Resume',
-    icon: BriefcaseBusiness,
+    icon: FileText,
   },
   {
     to: '/projects',
     label: 'Projects',
-    icon: FolderKanban,
+    icon: BriefcaseBusiness,
   },
   {
     to: '/contact',
@@ -30,21 +34,66 @@ const navigationItems = [
 ]
 
 export function SideNavigation() {
-  return (
-    <nav className="side-navigation" aria-label="Portfolio navigation">
-      {navigationItems.map(({ to, label, icon: Icon }) => (
-        <NavLink
-          key={to}
-          to={to}
-          className={({ isActive }) =>
-            `navigation-item${isActive ? ' navigation-item-active' : ''}`
-          }
-        >
-          <Icon size={20} strokeWidth={1.8} />
+  const [darkMode, setDarkMode] = useState(true)
 
-          <span>{label}</span>
-        </NavLink>
-      ))}
-    </nav>
+  useEffect(() => {
+    document.documentElement.dataset.portfolioTheme =
+      darkMode ? 'dark' : 'light'
+  }, [darkMode])
+
+  return (
+    <header className="futurism-header">
+      <div className="futurism-header-outline" />
+
+      <div className="futurism-utility">
+        <button
+          className="futurism-utility-button futurism-menu-button"
+          type="button"
+          aria-label="Menu"
+        >
+          <Menu size={30} strokeWidth={1.5} />
+        </button>
+
+        <button
+          className="futurism-utility-button"
+          type="button"
+          aria-label="Toggle theme"
+          onClick={() => setDarkMode((current) => !current)}
+        >
+          {darkMode ? (
+            <Sun size={28} strokeWidth={1.45} />
+          ) : (
+            <Moon size={28} strokeWidth={1.45} />
+          )}
+        </button>
+
+        <button
+          className="futurism-utility-button futurism-status-button"
+          type="button"
+          aria-label="Projects"
+        >
+          <BriefcaseBusiness size={27} strokeWidth={1.45} />
+          <span className="futurism-status-badge">4</span>
+        </button>
+      </div>
+
+      <nav className="futurism-menu" aria-label="Portfolio navigation">
+        {navigationItems.map(({ to, label, icon: Icon }) => (
+          <NavLink
+            key={to}
+            to={to}
+            className={({ isActive }) =>
+              `futurism-menu-item${isActive ? ' is-active' : ''}`
+            }
+          >
+            <Icon size={27} strokeWidth={1.45} />
+
+            <span className="futurism-menu-label">
+              {label}
+            </span>
+          </NavLink>
+        ))}
+      </nav>
+    </header>
   )
 }
