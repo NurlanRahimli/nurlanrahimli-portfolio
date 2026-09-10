@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react'
 import { AboutPage } from '../pages/about/AboutPage'
 import { ContactPage } from '../pages/contact/ContactPage'
+import { ProjectDetailsPage } from '../pages/projects/ProjectDetailsPage'
 import { ProjectsPage } from '../pages/projects/ProjectsPage'
 import { ResumePage } from '../pages/resume/ResumePage'
 
@@ -31,6 +32,12 @@ export const portfolioRoutes: PortfolioRoute[] = [
     component: ProjectsPage,
   },
   {
+    path: '/projects/:slug',
+    label: 'Project Details',
+    index: 2,
+    component: ProjectDetailsPage,
+  },
+  {
     path: '/contact',
     label: 'Contact',
     index: 3,
@@ -39,5 +46,9 @@ export const portfolioRoutes: PortfolioRoute[] = [
 ]
 
 export function getPortfolioRouteIndex(pathname: string) {
+  if (pathname.startsWith('/projects/')) {
+    return 2
+  }
+
   return portfolioRoutes.findIndex((route) => route.path === pathname)
 }
