@@ -1,3 +1,40 @@
+import {
+  SiDocker,
+  SiFastapi,
+  SiFlutter,
+  SiGit,
+  SiGithub,
+  SiJavascript,
+  SiLinux,
+  SiPostgresql,
+  SiPython,
+  SiReact,
+  SiRedis,
+  SiTypescript,
+} from 'react-icons/si'
+import { FaAws } from 'react-icons/fa6'
+import { BsOpenai } from 'react-icons/bs'
+import { TbApi, TbBrain } from 'react-icons/tb'
+
+const skills = [
+  { name: 'React', icon: SiReact, className: 'skill-react' },
+  { name: 'TypeScript', icon: SiTypescript, className: 'skill-typescript' },
+  { name: 'JavaScript', icon: SiJavascript, className: 'skill-javascript' },
+  { name: 'Python', icon: SiPython, className: 'skill-python' },
+  { name: 'FastAPI', icon: SiFastapi, className: 'skill-fastapi' },
+  { name: 'PostgreSQL', icon: SiPostgresql, className: 'skill-postgresql' },
+  { name: 'Redis', icon: SiRedis, className: 'skill-redis' },
+  { name: 'Docker', icon: SiDocker, className: 'skill-docker' },
+  { name: 'AWS', icon: FaAws, className: 'skill-aws' },
+  { name: 'Git', icon: SiGit, className: 'skill-git' },
+  { name: 'GitHub', icon: SiGithub, className: 'skill-github' },
+  { name: 'OpenAI', icon: BsOpenai, className: 'skill-openai' },
+  { name: 'Machine Learning', icon: TbBrain, className: 'skill-machine-learning' },
+  { name: 'REST APIs', icon: TbApi, className: 'skill-rest-api' },
+  { name: 'Flutter', icon: SiFlutter, className: 'skill-flutter' },
+  { name: 'Linux', icon: SiLinux, className: 'skill-linux' },
+]
+
 export function AboutPage() {
   return (
     <>
@@ -156,6 +193,24 @@ export function AboutPage() {
           </div>
 
           <div className="clear" />
+        </div>
+      </div>
+
+      <div className="content skills">
+        <div className="title skills-title">
+          <span>Skills &amp; Technologies</span>
+          <span className="skills-title-note">Tools I Work With</span>
+        </div>
+
+        <div className="skills-grid">
+          {skills.map(({ name, icon: Icon, className }) => (
+            <div className="skill-item" key={name}>
+              <div className={`skill-icon ${className}`}>
+                <Icon aria-hidden="true" />
+              </div>
+              <span className="skill-name">{name}</span>
+            </div>
+          ))}
         </div>
       </div>
     </>
