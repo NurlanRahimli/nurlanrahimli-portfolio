@@ -5,13 +5,17 @@ import { ProfileCard } from '../components/profile/ProfileCard'
 
 export function PortfolioLayout() {
   return (
-    <div className="portfolio-shell">
+    <div className="ryancv-app">
       <AnimatedBackground />
 
-      <div className="portfolio-interface">
+      <div className="ryancv-container">
         <SideNavigation />
+
         <ProfileCard />
-        <PortfolioBook />
+
+        <section className="ryancv-content-panel">
+          <PortfolioBook />
+        </section>
       </div>
     </div>
   )

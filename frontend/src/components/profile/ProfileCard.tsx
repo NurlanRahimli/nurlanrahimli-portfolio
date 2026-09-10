@@ -1,61 +1,73 @@
-import { Download, Mail } from 'lucide-react'
+import { Download, Send } from 'lucide-react'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 
 export function ProfileCard() {
   return (
-    <aside className="profile-card">
-      <div className="profile-image-placeholder">
-        <span>NR</span>
-      </div>
+    <aside className="ryancv-card-started">
+      <div className="ryancv-card-backdrop" />
 
-      <div className="profile-card-content">
-        <p className="profile-eyebrow">Software Engineer</p>
+      <div className="ryancv-profile">
+        <div className="ryancv-profile-content">
+          <div className="ryancv-profile-slide">
+            <img
+              className="ryancv-profile-image"
+              src="/profile-assets/ryancv-profile.jpg"
+              alt=""
+            />
 
-        <h2>Nurlan Rahimli</h2>
+            <div className="ryancv-profile-image-overlay" />
 
-        <p className="profile-role">
-          Full-Stack Developer
-          <span>AI / ML Engineer</span>
-        </p>
+            <img
+              className="ryancv-rprof-before"
+              src="/profile-assets/profile-shape-before.svg"
+              alt=""
+              aria-hidden="true"
+            />
 
-        <p className="profile-description">
-          I build full-stack and AI-powered applications focused on useful,
-          polished digital experiences.
-        </p>
+            <img
+              className="ryancv-rprof-after"
+              src="/profile-assets/profile-shape-after.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </div>
 
-        <div className="profile-socials">
-          <a
-            href="https://github.com/NurlanRahimli"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub"
-          >
-            <FaGithub size={18} />
-          </a>
+          <div className="ryancv-profile-identity">
+            <h1>Nurlan Rahimli</h1>
+            <p>Software Engineer</p>
 
-          <a
-            href="https://www.linkedin.com"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="LinkedIn"
-          >
-            <FaLinkedinIn size={18} />
-          </a>
+            <div className="ryancv-profile-socials">
+              <a
+                href="https://github.com/NurlanRahimli"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+              >
+                <FaGithub />
+              </a>
 
-          <Link to="/contact" aria-label="Contact">
-            <Mail size={19} />
-          </Link>
+              <a
+                href="https://www.linkedin.com"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+              >
+                <FaLinkedinIn />
+              </a>
+            </div>
+          </div>
         </div>
 
-        <div className="profile-actions">
-          <button type="button" className="profile-action profile-action-muted">
-            <Download size={17} />
-            Resume
+        <div className="ryancv-profile-actions">
+          <button type="button">
+            <span>Download CV</span>
+            <Download size={16} />
           </button>
 
-          <Link to="/contact" className="profile-action">
-            Contact Me
+          <Link to="/contact">
+            <span>Contact Me</span>
+            <Send size={16} />
           </Link>
         </div>
       </div>
