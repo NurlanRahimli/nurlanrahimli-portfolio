@@ -2621,3 +2621,654 @@ a {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* =========================================================
+   RESUME — EXPERIENCE
+========================================================= */
+
+.ryancv-content-panel .resume-page {
+  font-family: "Poppins", sans-serif;
+}
+
+.ryancv-content-panel .resume-main-heading {
+  position: relative;
+}
+
+.ryancv-content-panel .resume-section-row {
+  position: relative;
+  margin: 0 -30px;
+}
+
+.ryancv-content-panel .resume-section-column {
+  position: relative;
+  width: 50%;
+  padding: 30px;
+}
+
+/* RyanCV resume section heading */
+.ryancv-content-panel .resume-title {
+  position: relative;
+  padding: 0 0 30px;
+}
+
+.ryancv-content-panel .resume-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: radial-gradient(
+    ellipse at left,
+    rgba(197, 202, 213, 0.15) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+}
+
+.ryancv-content-panel .resume-title .icon {
+  position: relative;
+  top: -13px;
+  float: left;
+  width: 40px;
+  height: 40px;
+  margin-right: 7px;
+  color: #a1c569;
+  font-size: 32px;
+}
+
+.ryancv-content-panel .resume-title .icon svg {
+  display: block;
+  width: 28px;
+  height: 28px;
+  stroke: currentColor;
+}
+
+.ryancv-content-panel .resume-title .name {
+  margin: 0 0 0 40px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 14px;
+  text-transform: uppercase;
+}
+
+/* RyanCV timeline */
+.ryancv-content-panel .resume-items {
+  position: relative;
+}
+
+.ryancv-content-panel .resume-items.line-timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 36px;
+  bottom: 0;
+  width: 1px;
+  background: rgba(197, 202, 213, 0.15);
+}
+
+.ryancv-content-panel .resume-items.line-timeline .resume-item {
+  position: relative;
+  margin: 0 0 0 15px;
+  padding: 30px 0;
+}
+
+.ryancv-content-panel .resume-items.line-timeline .resume-item::before {
+  content: '';
+  position: absolute;
+  left: -19px;
+  top: 35px;
+  width: 9px;
+  height: 9px;
+  background: #666;
+  border-radius: 100%;
+}
+
+.ryancv-content-panel
+  .resume-items.line-timeline
+  .resume-item.active::before {
+  background: #a1c569;
+}
+
+.ryancv-content-panel .resume-items.line-timeline .resume-item::after {
+  content: '';
+  position: absolute;
+  left: -15px;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: radial-gradient(
+    ellipse at left,
+    rgba(197, 202, 213, 0.15) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+}
+
+.ryancv-content-panel
+  .resume-items.line-timeline
+  .resume-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.ryancv-content-panel
+  .resume-items.line-timeline
+  .resume-item:last-child::after {
+  display: none;
+}
+
+/* Experience content */
+.ryancv-content-panel .resume-items .resume-item .date {
+  position: relative;
+  display: inline-block;
+  margin: 0 0 11px;
+  padding: 0 5px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #9a9a9a;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.ryancv-content-panel .resume-items .resume-item.active .date {
+  border-color: #a1c569;
+  color: #a1c569;
+}
+
+.ryancv-content-panel .resume-items .resume-item .name {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.ryancv-content-panel .resume-items .resume-item .company {
+  margin: 4px 0 11px;
+  color: #999;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.ryancv-content-panel .resume-items .resume-item p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+@media (max-width: 1120px) {
+  .ryancv-content-panel .resume-section-column {
+    width: 100%;
+  }
+}
+
+@media (max-width: 680px) {
+  .ryancv-content-panel .resume-section-row {
+    margin: 0;
+  }
+
+  .ryancv-content-panel .resume-section-column {
+    padding: 30px 0;
+  }
+}
+
+/* =========================================================
+   RESUME — RYANCV TEXTURED SECTION TITLE
+========================================================= */
+
+.ryancv-content-panel .resume-title {
+  display: flex;
+  min-height: 74px;
+  padding: 0 0 30px;
+  align-items: center;
+}
+
+.ryancv-content-panel .resume-title .icon {
+  position: relative;
+  top: 0;
+  float: none;
+  display: flex;
+  flex: 0 0 50px;
+  width: 50px;
+  height: 50px;
+  margin: -16px 12px 0 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #31313a !important;
+  background-image: url('/profile-assets/noise-texture-dark.svg');
+  background-size: 50px 50px;
+  color: #a1c568;
+}
+
+.ryancv-content-panel .resume-title .icon svg {
+  display: block;
+  width: 25px;
+  height: 25px;
+  fill: currentColor;
+  stroke: none;
+}
+
+.ryancv-content-panel .resume-title .name {
+  margin: -16px 0 0;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   RESUME — TWO COLUMN LAYOUT
+========================================================= */
+
+.ryancv-content-panel .resume-section-row {
+  display: flex;
+  margin: -8px -30px 0;
+  align-items: flex-start;
+}
+
+.ryancv-content-panel .resume-section-column {
+  position: relative;
+  width: 50%;
+  padding: 30px;
+}
+
+.ryancv-content-panel .resume-section-column-education::before {
+  content: '';
+  position: absolute;
+  top: 30px;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: radial-gradient(
+    ellipse at top,
+    rgba(197, 202, 213, 0.16) 0%,
+    rgba(255, 255, 255, 0) 80%
+  );
+}
+
+.ryancv-content-panel .resume-certificate-link {
+  display: inline-flex;
+  margin-top: 12px;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 180ms ease;
+}
+
+.ryancv-content-panel .resume-certificate-link:hover {
+  color: #a1c569;
+}
+
+.ryancv-content-panel .resume-certificate-link span:last-child {
+  color: #a1c569;
+  font-size: 18px;
+  line-height: 1;
+}
+
+@media (max-width: 1120px) {
+  .ryancv-content-panel .resume-section-row {
+    display: block;
+  }
+
+  .ryancv-content-panel .resume-section-column {
+    width: 100%;
+  }
+
+  .ryancv-content-panel .resume-section-column-education::before {
+    display: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .ryancv-content-panel .resume-section-row {
+    margin: 0;
+  }
+}
+
+/* =========================================================
+   RESUME — FINAL RYANCV ALIGNMENT
+========================================================= */
+
+.ryancv-content-panel .resume-main-heading {
+  margin-bottom: 0;
+}
+
+.ryancv-content-panel .resume-section-row {
+  display: flex;
+  margin: 0 -30px;
+  align-items: flex-start;
+}
+
+.ryancv-content-panel .resume-section-column {
+  position: relative;
+  width: 50%;
+  padding: 30px;
+}
+
+.ryancv-content-panel .resume-title {
+  display: block;
+  position: relative;
+  min-height: 0;
+  padding: 0 0 30px;
+}
+
+.ryancv-content-panel .resume-title .icon {
+  position: relative;
+  top: 0;
+  float: left;
+  display: flex;
+  width: 50px;
+  height: 50px;
+  margin: -16px 12px 0 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  background-color: #202020 !important;
+  background-image: url('/profile-assets/noise-texture-dark.svg');
+  background-size: 50px 50px;
+  color: #a1c568;
+  line-height: 50px;
+}
+
+.ryancv-content-panel .resume-title .icon svg {
+  display: block;
+  width: 28px;
+  height: 28px;
+  fill: #a1c568;
+}
+
+.ryancv-content-panel .resume-title .name {
+  margin: 0 0 0 62px;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: "Sora", "Poppins", sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 14px;
+  text-transform: uppercase;
+}
+
+.ryancv-content-panel .resume-section-column-education::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: radial-gradient(
+    ellipse at top,
+    rgba(197, 202, 213, 0.15) 0%,
+    rgba(255, 255, 255, 0) 90%
+  );
+}
+
+@media (max-width: 1120px) {
+  .ryancv-content-panel .resume-section-row {
+    display: block;
+  }
+
+  .ryancv-content-panel .resume-section-column {
+    width: 100%;
+  }
+
+  .ryancv-content-panel .resume-section-column-education::before {
+    display: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .ryancv-content-panel .resume-section-row {
+    margin: 0;
+  }
+
+  .ryancv-content-panel .resume-section-column {
+    padding: 30px 0;
+  }
+}
+
+/* =========================================================
+   RESUME — TESTIMONIALS
+========================================================= */
+
+.ryancv-content-panel .testimonials {
+  margin-bottom: 40px;
+}
+
+.ryancv-content-panel .testimonial-items {
+  position: relative;
+  margin: 0 -30px;
+}
+
+.ryancv-content-panel .revs-carousel {
+  position: relative;
+  padding: 30px 30px 0;
+  text-align: center;
+}
+
+.ryancv-content-panel .revs-slider-window {
+  overflow: hidden;
+  width: 100%;
+  padding-bottom: 30px;
+}
+
+.ryancv-content-panel .revs-slider-track {
+  display: flex;
+  width: 100%;
+  transition: transform 420ms ease;
+  will-change: transform;
+}
+
+.ryancv-content-panel .revs-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+}
+
+.ryancv-content-panel .revs-item {
+  position: relative;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ryancv-content-panel .revs-item .text {
+  position: relative;
+  margin-bottom: 30px;
+  padding: 0 48px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.6;
+  opacity: 0.65;
+}
+
+.ryancv-content-panel .revs-item .text::before,
+.ryancv-content-panel .revs-item .text::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  background: url('/images/quote_d.svg') no-repeat center;
+  background-size: contain;
+  opacity: 0.65;
+}
+
+.ryancv-content-panel .revs-item .text::after {
+  top: auto;
+  right: 3px;
+  bottom: 3px;
+  left: auto;
+  transform: scale(-1);
+}
+
+.ryancv-content-panel .revs-item .user .img {
+  display: block;
+  width: 92px;
+  height: 92px;
+  margin: 0 auto;
+}
+
+.ryancv-content-panel .revs-item .user .img img {
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+  object-fit: cover;
+}
+
+.ryancv-content-panel .revs-item .info .name {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.ryancv-content-panel .revs-item .info .company {
+  color: #999;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.ryancv-content-panel .revs-pagination {
+  display: flex;
+  height: 10px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.ryancv-content-panel .revs-pagination-bullet {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #a1c568;
+  border-radius: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  outline: none;
+}
+
+.ryancv-content-panel .revs-pagination-bullet.active {
+  background: #a1c568;
+}
+
+.ryancv-content-panel .revs-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  display: flex;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  background: rgba(32, 32, 32, 0.86);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+.ryancv-content-panel .revs-arrow:hover {
+  border-color: rgba(161, 197, 104, 0.55);
+  background: #202020;
+  color: #a1c568;
+}
+
+.ryancv-content-panel .revs-arrow svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ryancv-content-panel .revs-arrow-prev {
+  left: 8px;
+}
+
+.ryancv-content-panel .revs-arrow-next {
+  right: 8px;
+}
+
+@media (max-width: 680px) {
+  .ryancv-content-panel .testimonial-items {
+    margin: 0;
+  }
+
+  .ryancv-content-panel .revs-carousel {
+    padding: 30px 0 0;
+  }
+
+  .ryancv-content-panel .revs-item .text {
+    padding: 0 42px;
+  }
+
+  .ryancv-content-panel .revs-arrow-prev {
+    left: 0;
+  }
+
+  .ryancv-content-panel .revs-arrow-next {
+    right: 0;
+  }
+}
+
+
+/* =========================================================
+   RESUME — EDUCATION CERTIFICATE LINK
+========================================================= */
+
+.ryancv-content-panel .resume-certificate-link {
+  position: relative;
+  display: inline-flex;
+  width: auto;
+  height: auto;
+  margin-top: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: inherit;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.ryancv-content-panel .resume-certificate-link .text,
+.ryancv-content-panel .resume-certificate-link svg {
+  position: relative;
+  left: 0;
+  transition: all 0.3s ease;
+}
+
+.ryancv-content-panel .resume-certificate-link svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ryancv-content-panel .resume-certificate-link:hover {
+  color: #a1c568;
+}
+
+.ryancv-content-panel .resume-certificate-link:hover svg {
+  left: 4px;
+  color: #a1c568;
+}
