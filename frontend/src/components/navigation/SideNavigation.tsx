@@ -35,6 +35,20 @@ const navigationItems = [
 
 export function SideNavigation() {
   const [darkMode, setDarkMode] = useState(true)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 40)
+    }
+
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
 
   useEffect(() => {
     document.documentElement.dataset.portfolioTheme =
@@ -42,7 +56,7 @@ export function SideNavigation() {
   }, [darkMode])
 
   return (
-    <header className="futurism-header">
+    <header className={`futurism-header${isScrolled ? " is-scrolled" : ""}`}>
       <div className="futurism-header-outline" />
 
       <div className="futurism-utility">

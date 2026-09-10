@@ -3272,3 +3272,620 @@ a {
   left: 4px;
   color: #a1c568;
 }
+
+
+/* =========================================================
+   CUSTOM TABLET PORTFOLIO
+   681px — 1120px
+========================================================= */
+
+@media (min-width: 681px) and (max-width: 1120px) {
+  .ryancv-app {
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .ryancv-container {
+    position: relative;
+    display: flex;
+    width: min(920px, calc(100% - 32px));
+    height: auto;
+    min-height: 0;
+    max-width: none;
+    max-height: none;
+    margin: 20px auto 48px;
+    padding: 0;
+    flex-direction: column;
+    perspective: none;
+  }
+
+  .futurism-header {
+    position: sticky !important;
+    top: 12px !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    z-index: 200;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 0 16px;
+    perspective: none;
+    transition:
+      transform 0.35s ease,
+      background 0.35s ease,
+      box-shadow 0.35s ease,
+      backdrop-filter 0.35s ease;
+  }
+
+  .futurism-header.is-scrolled {
+    transform: translateY(-4px) scale(0.985);
+  }
+
+  .futurism-header-outline,
+  .futurism-utility {
+    display: none;
+  }
+
+  .futurism-menu {
+    display: grid;
+    width: 100%;
+    padding: 0;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    overflow: hidden;
+    background:
+      url("/profile-assets/noise-texture-dark.svg"),
+      rgba(32, 32, 32, 0.88);
+    background-size: 50px 50px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+    transform: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition:
+      background 0.35s ease,
+      box-shadow 0.35s ease,
+      border-color 0.35s ease;
+  }
+
+  .futurism-header.is-scrolled .futurism-menu {
+    background:
+      url("/profile-assets/noise-texture-dark.svg"),
+      rgba(25, 25, 25, 0.96);
+    border-color: rgba(161, 197, 105, 0.18);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+  }
+
+  .futurism-menu-item {
+    display: flex;
+    width: 100%;
+    height: 68px;
+    min-height: 68px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 0;
+    transition:
+      height 0.35s ease,
+      color 0.3s ease,
+      background 0.3s ease;
+  }
+
+  .futurism-header.is-scrolled .futurism-menu-item {
+    height: 58px;
+    min-height: 58px;
+  }
+
+  .futurism-menu-item:last-child {
+    border-right: 0;
+  }
+
+  .futurism-menu-label {
+    position: static !important;
+    display: block !important;
+    margin: 0;
+    padding: 0;
+    color: inherit;
+    background: transparent;
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    opacity: 1 !important;
+  }
+
+  .futurism-menu-item:hover .futurism-menu-label,
+  .futurism-menu-item.is-active .futurism-menu-label {
+    position: static !important;
+    left: auto !important;
+    color: #A1C569;
+    opacity: 1;
+  }
+
+  .ryancv-card-started {
+    position: relative;
+    width: 100%;
+    height: 560px;
+    margin: 0 0 18px;
+    perspective: none;
+  }
+
+  .ryancv-card-backdrop {
+    top: -8px;
+    right: 8px;
+    bottom: 8px;
+    left: -8px;
+    transform: none;
+  }
+
+  .ryancv-profile {
+    width: 100%;
+    height: 100%;
+    transform: none;
+    border-radius: 8px;
+  }
+
+  .ryancv-profile-content {
+    padding: 32px 30px 92px;
+  }
+
+  .ryancv-profile-image {
+    object-position: center 28%;
+  }
+
+  .ryancv-rprof-before,
+  .ryancv-rprof-after {
+    left: -12%;
+    width: 124%;
+    height: 165px;
+  }
+
+  .ryancv-profile-identity h1 {
+    font-size: 32px;
+  }
+
+  .ryancv-profile-actions {
+    height: 66px;
+  }
+
+  .ryancv-content-panel {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: 100%;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    border-radius: 8px;
+  }
+
+  .ryancv-content-panel .ryan-card-stage,
+  .ryancv-content-panel .ryan-card-inner,
+  .ryancv-content-panel .ryan-card-wrap {
+    position: relative;
+    width: 100%;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  .ryancv-content-panel .ryan-card-wrap {
+    padding: 30px 28px 12px;
+  }
+
+  .ryancv-content-panel .content.about .row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .ryancv-content-panel .content.about .row .col.col-t-12 {
+    width: 50% !important;
+  }
+
+  .ryancv-content-panel .service-items .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .ryancv-content-panel .service-items .col.col-t-6 {
+    width: 50% !important;
+  }
+
+  .ryancv-content-panel .skills-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px;
+  }
+}
+
+
+/* =========================================================
+   CUSTOM MOBILE PORTFOLIO
+   <= 680px
+========================================================= */
+
+@media (max-width: 680px) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+
+  .ryancv-app {
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
+
+  .ryancv-container {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0 12px 30px;
+    box-sizing: border-box;
+    flex-direction: column;
+    perspective: none;
+  }
+
+  .futurism-header {
+    position: sticky !important;
+    top: 8px !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    z-index: 250;
+    width: 100% !important;
+    height: auto !important;
+    margin: 10px 0;
+    perspective: none;
+    transition:
+      transform 0.35s ease,
+      margin 0.35s ease;
+  }
+
+  .futurism-header.is-scrolled {
+    transform: translateY(-2px) scale(0.985);
+  }
+
+  .futurism-header-outline,
+  .futurism-utility {
+    display: none;
+  }
+
+  .futurism-menu {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding: 0;
+    overflow: hidden;
+    background:
+      url("/profile-assets/noise-texture-dark.svg"),
+      rgba(32, 32, 32, 0.9);
+    background-size: 50px 50px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+    transform: none;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition:
+      background 0.35s ease,
+      box-shadow 0.35s ease,
+      border-color 0.35s ease;
+  }
+
+  .futurism-header.is-scrolled .futurism-menu {
+    background:
+      url("/profile-assets/noise-texture-dark.svg"),
+      rgba(23, 23, 23, 0.97);
+    border-color: rgba(161, 197, 105, 0.18);
+    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.34);
+  }
+
+  .futurism-menu-item {
+    display: flex;
+    width: 100%;
+    height: 60px;
+    min-height: 60px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 0;
+    transition:
+      height 0.35s ease,
+      color 0.3s ease,
+      background 0.3s ease;
+  }
+
+  .futurism-header.is-scrolled .futurism-menu-item {
+    height: 52px;
+    min-height: 52px;
+  }
+
+  .futurism-menu-item:last-child {
+    border-right: 0;
+  }
+
+  .futurism-menu-item svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .futurism-menu-label {
+    position: static !important;
+    display: block !important;
+    margin: 0;
+    padding: 0;
+    color: inherit;
+    background: transparent;
+    font-size: 8px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    opacity: 1 !important;
+  }
+
+  .futurism-menu-item:hover .futurism-menu-label,
+  .futurism-menu-item.is-active .futurism-menu-label {
+    position: static !important;
+    left: auto !important;
+    color: #A1C569;
+    opacity: 1;
+  }
+
+  .ryancv-card-started {
+    position: relative;
+    width: 100%;
+    height: 490px;
+    margin: 0 0 12px;
+    perspective: none;
+  }
+
+  .ryancv-card-backdrop {
+    display: none;
+  }
+
+  .ryancv-profile {
+    width: 100%;
+    height: 100%;
+    transform: none;
+    border-radius: 8px;
+  }
+
+  .ryancv-profile-content {
+    padding: 22px 16px 82px;
+  }
+
+  .ryancv-profile-image {
+    object-position: center 25%;
+  }
+
+  .ryancv-rprof-before,
+  .ryancv-rprof-after {
+    left: -18%;
+    width: 136%;
+    height: 125px;
+  }
+
+  .ryancv-profile-identity h1 {
+    font-size: clamp(27px, 8vw, 34px);
+  }
+
+  .ryancv-profile-identity p {
+    font-size: 14px;
+    line-height: 25px;
+  }
+
+  .ryancv-profile-socials {
+    margin-top: 10px;
+  }
+
+  .ryancv-profile-actions {
+    height: 62px;
+  }
+
+  .ryancv-profile-actions button,
+  .ryancv-profile-actions a {
+    padding: 0 6px;
+    font-size: 8.5px;
+  }
+
+  .ryancv-content-panel {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: 100%;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    border-radius: 8px;
+  }
+
+  .ryancv-content-panel .ryan-card-stage,
+  .ryancv-content-panel .ryan-card-inner,
+  .ryancv-content-panel .ryan-card-wrap {
+    position: relative;
+    width: 100%;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  .ryancv-content-panel .ryan-card-wrap {
+    padding: 22px 16px 8px;
+  }
+
+  .ryancv-content-panel .content {
+    margin-bottom: 28px;
+  }
+
+  .ryancv-content-panel .content .title {
+    min-height: 44px;
+    padding-bottom: 22px;
+    font-size: 19px;
+  }
+
+  .ryancv-content-panel .row {
+    display: flex;
+    margin: 0 -16px;
+    flex-direction: column;
+    font-size: initial;
+  }
+
+  .ryancv-content-panel .row .col,
+  .ryancv-content-panel .row .col.col-d-6,
+  .ryancv-content-panel .row .col.col-t-12,
+  .ryancv-content-panel .row .col.col-t-6,
+  .ryancv-content-panel .row .col.col-m-12 {
+    display: block;
+    width: 100% !important;
+    padding: 22px 16px;
+  }
+
+  .ryancv-content-panel .row .col.border-line-v::before {
+    display: none;
+  }
+
+  .ryancv-content-panel .row .col + .col {
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .ryancv-content-panel .text-box {
+    font-size: 14px;
+    line-height: 1.72;
+  }
+
+  .ryancv-content-panel .info-list ul li {
+    display: flex;
+    width: 100%;
+    padding: 9px 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    font-size: 14px;
+    text-align: right;
+  }
+
+  .ryancv-content-panel .info-list ul li strong {
+    float: none;
+    flex-shrink: 0;
+    margin: 0;
+    font-size: 12px;
+  }
+
+  .ryancv-content-panel .service-items .service-item .icon {
+    width: 54px;
+    height: 54px;
+  }
+
+  .ryancv-content-panel .service-items .service-item .name {
+    font-size: 16px;
+  }
+
+  .ryancv-content-panel .service-items .service-item p {
+    font-size: 14px;
+  }
+
+  .ryancv-content-panel .skills-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px;
+    padding-top: 22px;
+  }
+
+  .ryancv-content-panel .skill-item {
+    min-height: 96px;
+  }
+}
+
+@media (max-width: 420px) {
+  .ryancv-container {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .ryancv-card-started {
+    height: 465px;
+  }
+
+  .ryancv-content-panel .ryan-card-wrap {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE STICKY HEADER — DOCUMENT SCROLL FIX
+========================================================= */
+
+@media (max-width: 1120px) {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+
+  body {
+    min-height: 100vh;
+  }
+
+  .ryancv-app {
+    min-height: 100vh;
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+  }
+
+  .ryancv-container {
+    overflow: visible !important;
+  }
+
+  .futurism-header {
+    position: sticky !important;
+    top: 10px !important;
+    z-index: 1000 !important;
+    align-self: stretch;
+  }
+}
+
+@media (max-width: 680px) {
+  .futurism-header {
+    top: 8px !important;
+  }
+}
+
+/* =========================================================
+   DESKTOP — WIDER PORTFOLIO CONTAINER
+========================================================= */
+
+@media (min-width: 1121px) {
+  .ryancv-container {
+    width: calc(100% - 48px);
+    max-width: 1500px;
+  }
+}
+
+@media (min-width: 1121px) {
+  .ryancv-container {
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    height: 90vh;
+    max-height: none;
+  }
+}
