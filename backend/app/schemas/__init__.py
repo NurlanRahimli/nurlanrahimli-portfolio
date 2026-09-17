@@ -6,3 +6,15 @@ __all__ = [
     "LoginRequest",
     "TokenResponse",
 ]
+
+from app.schemas.media import (
+    MediaAssetRead,
+    MediaAssetUpdate,
+    MediaVariantRead,
+)
+
+__all__ += [
+    "MediaAssetRead",
+    "MediaAssetUpdate",
+    "MediaVariantRead",
+]
