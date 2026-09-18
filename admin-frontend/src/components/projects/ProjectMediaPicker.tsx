@@ -6,11 +6,19 @@ import {
   LoaderCircle,
   Plus,
   Search,
+  Upload,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  type ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useToast } from "../../context/toastContext";
-import { listMedia } from "../../services/mediaApi";
+import { listMedia, uploadMedia } from "../../services/mediaApi";
 import type { MediaAsset } from "../../types/media";
 import { getMediaPreviewUrl } from "../media/mediaUtils";
 
@@ -61,6 +69,8 @@ export function ProjectMediaPicker({
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const uploadInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -143,6 +153,114 @@ export function ProjectMediaPicker({
     [selectedAssets, selectedIds],
   );
 
+  const handleUpload = async (files: File[]) => {
+    if (!files.length || isUploading) {
+      return;
+    }
+
+    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+
+    if (imageFiles.length !== files.length) {
+      showToast({
+        title: "Images only",
+        message: "Project galleries only support image files.",
+        type: "error",
+      });
+    }
+
+    if (imageFiles.length === 0) {
+      return;
+    }
+
+    setIsUploading(true);
+
+    const uploadedAssets: MediaAsset[] = [];
+
+    try {
+      for (const file of imageFiles) {
+        const uploaded = await uploadMedia(file);
+        uploadedAssets.push(uploaded);
+      }
+
+      setSearch("");
+      setDebouncedSearch("");
+
+      const result = await listMedia({
+        fileType: "image",
+        limit: 100,
+        offset: 0,
+      });
+
+      setAssets(result.items);
+
+      setSelected((current) => {
+        const next = [...current];
+
+        for (const asset of uploadedAssets) {
+          if (!next.includes(asset.id)) {
+            next.push(asset.id);
+          }
+        }
+
+        return next;
+      });
+
+      showToast({
+        title:
+          uploadedAssets.length === 1 ? "Image uploaded" : "Images uploaded",
+        message:
+          uploadedAssets.length === 1
+            ? `${uploadedAssets[0].original_filename} was uploaded and selected.`
+            : `${uploadedAssets.length} images were uploaded and selected.`,
+        type: "success",
+      });
+    } catch (error) {
+      if (uploadedAssets.length > 0) {
+        setSearch("");
+        setDebouncedSearch("");
+
+        const result = await listMedia({
+          fileType: "image",
+          limit: 100,
+          offset: 0,
+        });
+
+        setAssets(result.items);
+
+        setSelected((current) => {
+          const next = [...current];
+
+          for (const asset of uploadedAssets) {
+            if (!next.includes(asset.id)) {
+              next.push(asset.id);
+            }
+          }
+
+          return next;
+        });
+      }
+
+      showToast({
+        title: "Upload failed",
+        message:
+          uploadedAssets.length > 0
+            ? `${uploadedAssets.length} image${
+                uploadedAssets.length === 1 ? "" : "s"
+              } uploaded before the error. ${getErrorMessage(error)}`
+            : getErrorMessage(error),
+        type: "error",
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleUploadInput = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files ?? []);
+    event.target.value = "";
+    void handleUpload(files);
+  };
+
   const toggleAsset = (assetId: number) => {
     if (selectedIds.includes(assetId)) {
       return;
@@ -220,10 +338,40 @@ export function ProjectMediaPicker({
                 />
               </label>
 
-              <span>
-                {newAssets.length} new image
-                {newAssets.length === 1 ? "" : "s"} selected
-              </span>
+              <div className="project-media-picker__toolbar-actions">
+                <span>
+                  {newAssets.length} new image
+                  {newAssets.length === 1 ? "" : "s"} selected
+                </span>
+
+                <input
+                  ref={uploadInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/avif"
+                  multiple
+                  hidden
+                  onChange={handleUploadInput}
+                />
+
+                <button
+                  className="project-media-picker__upload"
+                  type="button"
+                  disabled={isUploading}
+                  onClick={() => uploadInputRef.current?.click()}
+                >
+                  {isUploading ? (
+                    <>
+                      <LoaderCircle className="projects-spin" size={17} />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload size={17} />
+                      Upload New
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
 
             <div className="project-media-picker__content">
