@@ -6,6 +6,8 @@ from app.api.v1.media import router as media_router
 from app.api.v1.mux_webhooks import router as mux_webhooks_router
 from app.api.v1.projects import router as projects_router
 from app.api.v1.public_projects import router as public_projects_router
+from app.api.v1.public_testimonials import router as public_testimonials_router
+from app.api.v1.testimonials import router as testimonials_router
 
 api_router = APIRouter()
 api_router.include_router(health_router)
@@ -14,3 +16,5 @@ api_router.include_router(media_router)
 api_router.include_router(mux_webhooks_router)
 api_router.include_router(projects_router)
 api_router.include_router(public_projects_router)
+api_router.include_router(testimonials_router)
+api_router.include_router(public_testimonials_router)

@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.models.media import MediaAsset, MediaVariant
 from app.models.project import Project, ProjectImage
+from app.models.testimonial import Testimonial
 from app.services.image_processing import create_image_variants
 from app.services.media_validation import ValidatedMedia, validate_media
 from app.services.r2_storage import R2Storage, r2_storage
@@ -241,11 +242,7 @@ class MediaAssetInUseError(Exception):
         if len(usages) == 1:
             detail = f"This media asset is currently used as {usages[0]}."
         else:
-            detail = (
-                "This media asset is currently in use: "
-                + ", ".join(usages)
-                + "."
-            )
+            detail = "This media asset is currently in use: " + ", ".join(usages) + "."
         super().__init__(detail)
 
 
@@ -259,20 +256,25 @@ def get_media_asset_usages(
     usages: list[str] = []
 
     cover_project = db.scalar(
-        select(Project.id)
-        .where(Project.cover_media_asset_id == asset_id)
-        .limit(1)
+        select(Project.id).where(Project.cover_media_asset_id == asset_id).limit(1)
     )
     if cover_project is not None:
         usages.append("a project cover image")
 
     gallery_project = db.scalar(
-        select(ProjectImage.id)
-        .where(ProjectImage.media_asset_id == asset_id)
-        .limit(1)
+        select(ProjectImage.id).where(ProjectImage.media_asset_id == asset_id).limit(1)
     )
     if gallery_project is not None:
         usages.append("a project gallery image")
+
+    testimonial_profile = db.scalar(
+        select(Testimonial.id)
+        .where(Testimonial.profile_media_asset_id == asset_id)
+        .limit(1)
+    )
+
+    if testimonial_profile is not None:
+        usages.append("a testimonial profile image")
 
     return usages
 
