@@ -5,14 +5,15 @@ __all__ = [
     "AdminUser",
     "MediaAsset",
     "MediaVariant",
-
     "Project",
     "ProjectFeature",
     "ProjectImage",
     "ProjectTag",
     "ProjectTechGroup",
     "ProjectTechItem",
-    "ProjectVideo",]
+    "ProjectVideo",
+    "Testimonial",
+]
 from app.models.project import (
     Project,
     ProjectFeature,
@@ -22,3 +23,5 @@ from app.models.project import (
     ProjectTechItem,
     ProjectVideo,
 )
+
+from app.models.testimonial import Testimonial

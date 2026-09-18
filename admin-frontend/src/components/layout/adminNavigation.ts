@@ -6,6 +6,7 @@ import {
   Mail,
   PanelsTopLeft,
   type LucideIcon,
+  MessageSquareQuote,
 } from "lucide-react";
 
 export interface AdminNavigationItem {
@@ -32,6 +33,12 @@ export const adminNavigation: AdminNavigationItem[] = [
     label: "Projects",
     path: "/projects",
     icon: FolderKanban,
+    available: true,
+  },
+  {
+    label: "Testimonials",
+    path: "/testimonials",
+    icon: MessageSquareQuote,
     available: true,
   },
   {
