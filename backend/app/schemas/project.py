@@ -78,6 +78,19 @@ class ProjectVideoRead(BaseModel):
     aspect_ratio: str | None
     original_filename: str | None
     error_message: str | None
+
+    pending_mux_upload_id: str | None
+    pending_mux_asset_id: str | None
+    pending_mux_playback_id: str | None
+    pending_status: str | None
+    pending_duration_seconds: float | None
+    pending_aspect_ratio: str | None
+    pending_original_filename: str | None
+    pending_error_message: str | None
+
+    cleanup_pending: bool
+    cleanup_error_message: str | None
+
     created_at: datetime
     updated_at: datetime
 
@@ -88,7 +101,7 @@ class ProjectWrite(BaseModel):
         max_length=160,
         pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$",
     )
-    title: str = Field(min_length=1, max_length=200)
+    title: str = Field(default="", max_length=200)
     project_type: str | None = Field(
         default=None,
         max_length=120,
@@ -125,8 +138,14 @@ class ProjectWrite(BaseModel):
         default_factory=list,
     )
 
+    @field_validator("title", mode="before")
+    @classmethod
+    def strip_title(cls, value: object) -> object:
+        if isinstance(value, str):
+            return value.strip()
+        return value
+
     @field_validator(
-        "title",
         "project_type",
         "short_description",
         "long_description",

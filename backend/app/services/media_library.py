@@ -6,6 +6,7 @@ from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session, selectinload
 
 from app.models.media import MediaAsset, MediaVariant
+from app.models.project import Project, ProjectImage
 from app.services.image_processing import create_image_variants
 from app.services.media_validation import ValidatedMedia, validate_media
 from app.services.r2_storage import R2Storage, r2_storage
@@ -232,12 +233,63 @@ def update_media_asset(
     return get_media_asset(db, asset.id) or asset
 
 
+class MediaAssetInUseError(Exception):
+    """Raised when a media asset is still referenced by application content."""
+
+    def __init__(self, usages: list[str]) -> None:
+        self.usages = usages
+        if len(usages) == 1:
+            detail = f"This media asset is currently used as {usages[0]}."
+        else:
+            detail = (
+                "This media asset is currently in use: "
+                + ", ".join(usages)
+                + "."
+            )
+        super().__init__(detail)
+
+
+def get_media_asset_usages(
+    db: Session,
+    *,
+    asset_id: int,
+) -> list[str]:
+    """Return human-readable locations that currently reference an asset."""
+
+    usages: list[str] = []
+
+    cover_project = db.scalar(
+        select(Project.id)
+        .where(Project.cover_media_asset_id == asset_id)
+        .limit(1)
+    )
+    if cover_project is not None:
+        usages.append("a project cover image")
+
+    gallery_project = db.scalar(
+        select(ProjectImage.id)
+        .where(ProjectImage.media_asset_id == asset_id)
+        .limit(1)
+    )
+    if gallery_project is not None:
+        usages.append("a project gallery image")
+
+    return usages
+
+
 def delete_media_asset(
     db: Session,
     *,
     asset: MediaAsset,
     storage: R2Storage = r2_storage,
 ) -> None:
+    usages = get_media_asset_usages(
+        db,
+        asset_id=asset.id,
+    )
+    if usages:
+        raise MediaAssetInUseError(usages)
+
     keys = [variant.storage_key for variant in asset.variants]
     keys.append(asset.storage_key)
 

@@ -21,10 +21,7 @@ import {
   listProjects,
   reorderProjects,
 } from "../services/projectsApi";
-import type {
-  ProjectListItem,
-  ProjectStatusFilter,
-} from "../types/project";
+import type { ProjectListItem, ProjectStatusFilter } from "../types/project";
 import { useToast } from "../context/toastContext";
 
 function GithubIcon({ size = 18 }: { size?: number }) {
@@ -91,14 +88,14 @@ export default function ProjectsPage() {
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [statusFilter, setStatusFilter] =
-    useState<ProjectStatusFilter>("all");
+  const [statusFilter, setStatusFilter] = useState<ProjectStatusFilter>("all");
   const [featuredOnly, setFeaturedOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const [isReordering, setIsReordering] = useState(false);
-  const [deleteTarget, setDeleteTarget] =
-    useState<ProjectListItem | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<ProjectListItem | null>(
+    null,
+  );
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
@@ -116,9 +113,7 @@ export default function ProjectsPage() {
       const result = await listProjects({
         search: debouncedSearch || undefined,
         isPublished:
-          statusFilter === "all"
-            ? undefined
-            : statusFilter === "published",
+          statusFilter === "all" ? undefined : statusFilter === "published",
         isFeatured: featuredOnly ? true : undefined,
       });
 
@@ -161,12 +156,17 @@ export default function ProjectsPage() {
     };
   }, [projects]);
 
+  const hasActiveFilters =
+    search.trim().length > 0 || statusFilter !== "all" || featuredOnly;
+
+  const canReorder = !hasActiveFilters && !isLoading;
+
   async function handleCreate() {
     setIsCreating(true);
 
     try {
       const project = await createProject({
-        title: "Untitled Project",
+        title: "",
       });
 
       showToast({
@@ -218,13 +218,13 @@ export default function ProjectsPage() {
   }
 
   async function moveProject(index: number, direction: -1 | 1) {
+    if (!canReorder) {
+      return;
+    }
+
     const targetIndex = index + direction;
 
-    if (
-      targetIndex < 0 ||
-      targetIndex >= projects.length ||
-      isReordering
-    ) {
+    if (targetIndex < 0 || targetIndex >= projects.length || isReordering) {
       return;
     }
 
@@ -273,8 +273,8 @@ export default function ProjectsPage() {
           <span className="admin-eyebrow">Portfolio content</span>
           <h1>Projects</h1>
           <p>
-            Create, organize, publish, and manage the work displayed across
-            your portfolio.
+            Create, organize, publish, and manage the work displayed across your
+            portfolio.
           </p>
         </div>
 
@@ -367,6 +367,16 @@ export default function ProjectsPage() {
         </div>
       </section>
 
+      <div
+        className={`projects-reorder-note${
+          hasActiveFilters ? " projects-reorder-note--disabled" : ""
+        }`}
+      >
+        {hasActiveFilters
+          ? "Clear filters to reorder."
+          : "Use the arrows to control the public project order."}
+      </div>
+
       <section className="projects-panel">
         {isLoading ? (
           <div className="projects-state">
@@ -403,7 +413,7 @@ export default function ProjectsPage() {
                     <button
                       type="button"
                       aria-label={`Move ${project.title} up`}
-                      disabled={index === 0 || isReordering}
+                      disabled={!canReorder || index === 0 || isReordering}
                       onClick={() => void moveProject(index, -1)}
                     >
                       <ArrowUp size={17} />
@@ -413,7 +423,9 @@ export default function ProjectsPage() {
                       type="button"
                       aria-label={`Move ${project.title} down`}
                       disabled={
-                        index === projects.length - 1 || isReordering
+                        !canReorder ||
+                        index === projects.length - 1 ||
+                        isReordering
                       }
                       onClick={() => void moveProject(index, 1)}
                     >
@@ -570,8 +582,8 @@ export default function ProjectsPage() {
               <span className="admin-eyebrow">Delete project</span>
               <h2 id="delete-project-title">Delete {deleteTarget.title}?</h2>
               <p>
-                This removes the project and its project relationships.
-                Media Library assets remain untouched.
+                This removes the project and its project relationships. Media
+                Library assets remain untouched.
               </p>
 
               <div className="projects-delete-modal__actions">

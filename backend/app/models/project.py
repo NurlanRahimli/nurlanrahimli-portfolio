@@ -401,6 +401,69 @@ class ProjectVideo(Base):
         nullable=True,
     )
 
+    # A replacement upload is kept completely separate from the active
+    # video until Mux confirms that the replacement asset is ready.
+    # This prevents a working public video from disappearing while a
+    # replacement is still uploading or processing.
+    # When a READY replacement is promoted, the old Mux resource is
+    # retained here until remote cleanup succeeds. This makes failed
+    # cleanup retryable without risking the newly active video.
+    cleanup_mux_upload_id: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True,
+    )
+    cleanup_mux_asset_id: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True,
+    )
+    cleanup_error_message: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    @property
+    def cleanup_pending(self) -> bool:
+        return (
+            self.cleanup_mux_upload_id is not None
+            or self.cleanup_mux_asset_id is not None
+        )
+
+    pending_mux_upload_id: Mapped[str | None] = mapped_column(
+        String(255),
+        unique=True,
+        nullable=True,
+    )
+    pending_mux_asset_id: Mapped[str | None] = mapped_column(
+        String(255),
+        unique=True,
+        nullable=True,
+    )
+    pending_mux_playback_id: Mapped[str | None] = mapped_column(
+        String(255),
+        unique=True,
+        nullable=True,
+    )
+    pending_status: Mapped[str | None] = mapped_column(
+        String(40),
+        nullable=True,
+    )
+    pending_duration_seconds: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
+    )
+    pending_aspect_ratio: Mapped[str | None] = mapped_column(
+        String(20),
+        nullable=True,
+    )
+    pending_original_filename: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True,
+    )
+    pending_error_message: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),

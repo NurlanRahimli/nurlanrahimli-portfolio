@@ -43,6 +43,19 @@ export interface ProjectVideo {
   aspect_ratio: string | null;
   original_filename: string | null;
   error_message: string | null;
+
+  pending_mux_upload_id: string | null;
+  pending_mux_asset_id: string | null;
+  pending_mux_playback_id: string | null;
+  pending_status: string | null;
+  pending_duration_seconds: number | null;
+  pending_aspect_ratio: string | null;
+  pending_original_filename: string | null;
+  pending_error_message: string | null;
+
+  cleanup_pending: boolean;
+  cleanup_error_message: string | null;
+
   created_at: string;
   updated_at: string;
 }

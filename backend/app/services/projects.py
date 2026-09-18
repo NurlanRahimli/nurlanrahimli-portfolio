@@ -606,15 +606,86 @@ def create_project_video_upload(
 ) -> Project:
     from app.models import ProjectVideo
 
-    if project.video is not None:
-        raise ProjectConflictError("This project already has a video.")
+    filename = original_filename.strip()
 
-    project.video = ProjectVideo(
-        mux_upload_id=mux_upload_id,
-        status="uploading",
-        original_filename=original_filename.strip(),
-    )
+    if project.video is None:
+        project.video = ProjectVideo(
+            mux_upload_id=mux_upload_id,
+            status="uploading",
+            original_filename=filename,
+        )
+        db.commit()
+        return get_project(db, project.id)  # type: ignore[return-value]
+
+    video = project.video
+
+    if video.status != "ready":
+        raise ProjectConflictError(
+            "The current project video has not finished processing yet."
+        )
+
+    if video.pending_mux_upload_id is not None:
+        raise ProjectConflictError(
+            "A replacement video is already uploading or processing."
+        )
+
+    if (
+        video.cleanup_mux_upload_id is not None
+        or video.cleanup_mux_asset_id is not None
+    ):
+        raise ProjectConflictError(
+            "The previous video replacement still has cleanup pending."
+        )
+
+    video.pending_mux_upload_id = mux_upload_id
+    video.pending_mux_asset_id = None
+    video.pending_mux_playback_id = None
+    video.pending_status = "uploading"
+    video.pending_duration_seconds = None
+    video.pending_aspect_ratio = None
+    video.pending_original_filename = filename
+    video.pending_error_message = None
 
     db.commit()
+    return get_project(db, project.id)  # type: ignore[return-value]
 
+
+def clear_project_video_cleanup_state(
+    db: Session,
+    *,
+    project: Project,
+) -> Project:
+    if project.video is None:
+        raise ProjectConflictError("This project does not have a video.")
+
+    video = project.video
+    video.cleanup_mux_upload_id = None
+    video.cleanup_mux_asset_id = None
+    video.cleanup_error_message = None
+
+    db.commit()
+    return get_project(db, project.id)  # type: ignore[return-value]
+
+
+def clear_pending_project_video(
+    db: Session,
+    *,
+    project: Project,
+) -> Project:
+    if project.video is None or project.video.pending_mux_upload_id is None:
+        raise ProjectConflictError(
+            "This project does not have a pending replacement video."
+        )
+
+    video = project.video
+    video.pending_mux_upload_id = None
+    video.pending_mux_asset_id = None
+    video.pending_mux_playback_id = None
+    video.pending_status = None
+    video.pending_duration_seconds = None
+    video.pending_aspect_ratio = None
+    video.pending_original_filename = None
+    video.pending_error_message = None
+
+    db.commit()
     return get_project(db, project.id)  # type: ignore[return-value]
