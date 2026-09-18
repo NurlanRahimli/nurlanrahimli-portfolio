@@ -1707,3 +1707,163 @@ def test_update_project_can_retain_same_nested_values(
         "React",
         "TypeScript",
     ]
+
+
+def test_create_project_allows_empty_title_for_draft(
+    client: TestClient,
+    authenticated_headers: dict[str, str],
+) -> None:
+    response = client.post(
+        "/api/v1/projects",
+        headers=authenticated_headers,
+        json={"title": ""},
+    )
+
+    assert response.status_code == 201
+
+    payload = response.json()
+
+    assert payload["title"] == ""
+    assert payload["slug"] == "project"
+    assert payload["is_published"] is False
+
+
+def test_delete_project_cleans_pending_then_active_before_database_delete(
+    client: TestClient,
+    authenticated_headers: dict[str, str],
+    db_session: Session,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    project = Project(
+        slug="delete-project-with-replacement",
+        title="Delete Project With Replacement",
+        project_type="Web Application",
+        short_description="Short description",
+        long_description="Long description",
+        project_date=date(2026, 6, 1),
+        is_published=False,
+        display_order=0,
+    )
+    db_session.add(project)
+    db_session.commit()
+    db_session.refresh(project)
+
+    video = ProjectVideo(
+        project_id=project.id,
+        mux_upload_id="active-upload",
+        mux_asset_id="active-asset",
+        mux_playback_id="active-playback",
+        status="ready",
+        original_filename="active.mp4",
+        pending_mux_upload_id="replacement-upload",
+        pending_mux_asset_id="replacement-asset",
+        pending_status="processing",
+        pending_original_filename="replacement.mp4",
+    )
+    db_session.add(video)
+    db_session.commit()
+
+    project_id = project.id
+    video_id = video.id
+    cleanup_calls: list[tuple[str | None, str | None]] = []
+
+    def fake_cleanup(
+        *,
+        upload_id: str | None,
+        asset_id: str | None,
+    ) -> None:
+        assert db_session.get(Project, project_id) is not None
+        assert db_session.get(ProjectVideo, video_id) is not None
+        cleanup_calls.append((upload_id, asset_id))
+
+    monkeypatch.setattr(
+        "app.api.v1.projects.cleanup_project_video",
+        fake_cleanup,
+    )
+
+    response = client.delete(
+        f"/api/v1/projects/{project_id}",
+        headers=authenticated_headers,
+    )
+
+    assert response.status_code == 204
+    assert cleanup_calls == [
+        ("replacement-upload", "replacement-asset"),
+        ("active-upload", "active-asset"),
+    ]
+    assert db_session.get(Project, project_id) is None
+    assert db_session.get(ProjectVideo, video_id) is None
+
+
+def test_delete_project_preserves_project_when_pending_cleanup_fails(
+    client: TestClient,
+    authenticated_headers: dict[str, str],
+    db_session: Session,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    project = Project(
+        slug="delete-project-pending-failure",
+        title="Delete Project Pending Failure",
+        project_type="Web Application",
+        short_description="Short description",
+        long_description="Long description",
+        project_date=date(2026, 6, 1),
+        is_published=False,
+        display_order=0,
+    )
+    db_session.add(project)
+    db_session.commit()
+    db_session.refresh(project)
+
+    video = ProjectVideo(
+        project_id=project.id,
+        mux_upload_id="active-upload",
+        mux_asset_id="active-asset",
+        mux_playback_id="active-playback",
+        status="ready",
+        original_filename="active.mp4",
+        pending_mux_upload_id="replacement-upload",
+        pending_mux_asset_id="replacement-asset",
+        pending_status="processing",
+        pending_original_filename="replacement.mp4",
+    )
+    db_session.add(video)
+    db_session.commit()
+
+    project_id = project.id
+    video_id = video.id
+    cleanup_calls: list[tuple[str | None, str | None]] = []
+
+    def fake_cleanup(
+        *,
+        upload_id: str | None,
+        asset_id: str | None,
+    ) -> None:
+        cleanup_calls.append((upload_id, asset_id))
+        raise MuxAPIError("Pending replacement cleanup failed.")
+
+    monkeypatch.setattr(
+        "app.api.v1.projects.cleanup_project_video",
+        fake_cleanup,
+    )
+
+    response = client.delete(
+        f"/api/v1/projects/{project_id}",
+        headers=authenticated_headers,
+    )
+
+    assert response.status_code == 502
+    assert response.json() == {"detail": "Pending replacement cleanup failed."}
+    assert cleanup_calls == [
+        ("replacement-upload", "replacement-asset"),
+    ]
+
+    preserved_project = db_session.get(Project, project_id)
+    preserved_video = db_session.get(ProjectVideo, video_id)
+
+    assert preserved_project is not None
+    assert preserved_video is not None
+    assert preserved_video.mux_asset_id == "active-asset"
+    assert preserved_video.status == "ready"
+    assert preserved_video.pending_mux_upload_id == "replacement-upload"
+    assert preserved_video.pending_mux_asset_id == "replacement-asset"

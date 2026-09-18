@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_current_admin
 from app.api.v1.media import serialize_media_asset
 from app.db.deps import get_db
-from app.models import AdminUser, MediaAsset, Project
+from app.models import AdminUser, MediaAsset, Project, ProjectVideo
 from app.schemas.project import (
     ProjectCreate,
     ProjectImageRead,
@@ -30,6 +30,8 @@ from app.services.mux_video import (
 from app.services.projects import (
     ProjectConflictError,
     ProjectMediaError,
+    clear_pending_project_video,
+    clear_project_video_cleanup_state,
     create_project,
     create_project_video_upload,
     delete_project,
@@ -325,6 +327,60 @@ def put_project_order(
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
+def cleanup_project_video_resources(
+    db: Session,
+    project: Project,
+    *,
+    include_active: bool = True,
+    include_pending: bool = True,
+    include_cleanup: bool = True,
+) -> None:
+    """Clean Mux resources and durably clear each completed resource slot."""
+
+    video = project.video
+    if video is None:
+        return
+
+    # Pending is first because it is never publicly active.
+    if include_pending and video.pending_mux_upload_id is not None:
+        cleanup_project_video(
+            upload_id=video.pending_mux_upload_id,
+            asset_id=video.pending_mux_asset_id,
+        )
+        clear_pending_project_video(
+            db,
+            project=project,
+        )
+        video = project.video
+        if video is None:
+            return
+
+    # A previously replaced resource is already detached from public playback.
+    if include_cleanup and (
+        video.cleanup_mux_upload_id is not None
+        or video.cleanup_mux_asset_id is not None
+    ):
+        cleanup_project_video(
+            upload_id=video.cleanup_mux_upload_id,
+            asset_id=video.cleanup_mux_asset_id,
+        )
+        clear_project_video_cleanup_state(
+            db,
+            project=project,
+        )
+        video = project.video
+        if video is None:
+            return
+
+    # The active video is deliberately last. Its row is removed immediately
+    # after this helper succeeds when deleting the video/project.
+    if include_active:
+        cleanup_project_video(
+            upload_id=video.mux_upload_id,
+            asset_id=video.mux_asset_id,
+        )
+
+
 @router.delete(
     "/{project_id}",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -348,9 +404,12 @@ def remove_project(
 
     if project.video is not None:
         try:
-            cleanup_project_video(
-                upload_id=project.video.mux_upload_id,
-                asset_id=project.video.mux_asset_id,
+            cleanup_project_video_resources(
+                db,
+                project,
+                include_active=True,
+                include_pending=True,
+                include_cleanup=True,
             )
         except MuxConfigurationError as exc:
             raise HTTPException(
@@ -400,9 +459,12 @@ def remove_video(
         )
 
     try:
-        cleanup_project_video(
-            upload_id=project.video.mux_upload_id,
-            asset_id=project.video.mux_asset_id,
+        cleanup_project_video_resources(
+            db,
+            project,
+            include_active=True,
+            include_pending=True,
+            include_cleanup=True,
         )
     except MuxConfigurationError as exc:
         raise HTTPException(
@@ -422,6 +484,117 @@ def remove_video(
         )
     except ProjectConflictError as exc:
         raise project_error(exc) from exc
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.delete(
+    "/{project_id}/video/replacement",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def cancel_video_replacement(
+    project_id: int,
+    db: Annotated[Session, Depends(get_db)],
+    current_admin: Annotated[
+        AdminUser,
+        Depends(get_current_admin),
+    ],
+) -> Response:
+    del current_admin
+
+    project = get_project(db, project_id)
+
+    if project is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found.",
+        )
+
+    if project.video is None or project.video.pending_mux_upload_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="This project does not have a pending replacement video.",
+        )
+
+    try:
+        cleanup_project_video_resources(
+            db,
+            project,
+            include_active=False,
+            include_pending=True,
+            include_cleanup=False,
+        )
+    except MuxConfigurationError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(exc),
+        ) from exc
+    except MuxAPIError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=str(exc),
+        ) from exc
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post(
+    "/{project_id}/video/cleanup/retry",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def retry_video_cleanup(
+    project_id: int,
+    db: Annotated[Session, Depends(get_db)],
+    current_admin: Annotated[
+        AdminUser,
+        Depends(get_current_admin),
+    ],
+) -> Response:
+    del current_admin
+
+    project = get_project(db, project_id)
+
+    if project is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found.",
+        )
+
+    if project.video is None or (
+        project.video.cleanup_mux_upload_id is None
+        and project.video.cleanup_mux_asset_id is None
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="This project does not have video cleanup pending.",
+        )
+
+    video = project.video
+
+    try:
+        cleanup_project_video(
+            upload_id=video.cleanup_mux_upload_id,
+            asset_id=video.cleanup_mux_asset_id,
+        )
+    except MuxConfigurationError as exc:
+        video.cleanup_error_message = str(exc)
+        db.commit()
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(exc),
+        ) from exc
+    except MuxAPIError as exc:
+        video.cleanup_error_message = str(exc)
+        db.commit()
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=str(exc),
+        ) from exc
+
+    clear_project_video_cleanup_state(
+        db,
+        project=project,
+    )
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
@@ -450,10 +623,26 @@ def create_video_upload(
         )
 
     if project.video is not None:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="This project already has a video.",
-        )
+        if project.video.status != "ready":
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=("The current project video has not finished processing yet."),
+            )
+
+        if project.video.pending_mux_upload_id is not None:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=("A replacement video is already uploading or processing."),
+            )
+
+        if (
+            project.video.cleanup_mux_upload_id is not None
+            or project.video.cleanup_mux_asset_id is not None
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=("The previous video replacement still has cleanup pending."),
+            )
 
     try:
         upload = create_direct_upload(

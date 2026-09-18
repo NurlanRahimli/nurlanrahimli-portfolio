@@ -21,6 +21,7 @@ import {
   Star,
   Tag,
   Trash2,
+  Video,
 } from "lucide-react";
 import {
   type FormEvent,
@@ -31,6 +32,7 @@ import {
 } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ProjectMediaPicker } from "../components/projects/ProjectMediaPicker";
+import { ProjectVideoManager } from "../components/projects/ProjectVideoManager";
 import { useToast } from "../context/toastContext";
 import { getProject, updateProject } from "../services/projectsApi";
 import type { MediaAsset } from "../types/media";
@@ -131,6 +133,15 @@ function getErrorMessage(error: unknown): string {
   return "Something went wrong. Please try again.";
 }
 
+function slugifyProjectTitle(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 function monthValue(date: string | null): string {
   if (!date) {
     return "";
@@ -142,7 +153,7 @@ function monthValue(date: string | null): string {
 function projectToEditor(project: Project): EditorState {
   return {
     title: project.title,
-    slug: project.slug,
+    slug: project.title ? project.slug : "",
     projectType: project.project_type ?? "",
     projectMonth: monthValue(project.project_date),
     shortDescription: project.short_description ?? "",
@@ -809,7 +820,19 @@ export default function ProjectEditorPage() {
                   value={form.title}
                   maxLength={200}
                   placeholder="Bookaify"
-                  onChange={(event) => updateField("title", event.target.value)}
+                  onChange={(event) => {
+                    const title = event.target.value;
+
+                    setForm((current) =>
+                      current
+                        ? {
+                            ...current,
+                            title,
+                            slug: slugifyProjectTitle(title),
+                          }
+                        : current,
+                    );
+                  }}
                 />
               </label>
 
@@ -820,14 +843,7 @@ export default function ProjectEditorPage() {
                   maxLength={160}
                   placeholder="bookaify"
                   onChange={(event) =>
-                    updateField(
-                      "slug",
-                      event.target.value
-                        .toLowerCase()
-                        .replace(/[^a-z0-9-]/g, "-")
-                        .replace(/-+/g, "-")
-                        .replace(/^-|-$/g, ""),
-                    )
+                    updateField("slug", slugifyProjectTitle(event.target.value))
                   }
                 />
                 <small>Used in the public project URL.</small>
@@ -1395,6 +1411,18 @@ export default function ProjectEditorPage() {
                 Add tech group
               </button>
             </div>
+          </EditorSection>
+
+          <EditorSection
+            eyebrow="07 · Video"
+            title="Project video"
+            description="Upload and manage the project video through Mux. Replacements are processed safely without taking the current video offline."
+            icon={<Video size={21} />}
+          >
+            <ProjectVideoManager
+              project={project}
+              onProjectChange={setProject}
+            />
           </EditorSection>
         </main>
 

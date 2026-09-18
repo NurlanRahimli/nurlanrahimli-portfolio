@@ -23,6 +23,7 @@ from app.schemas.media import (
     MediaVariantRead,
 )
 from app.services.media_library import (
+    MediaAssetInUseError,
     create_media_asset,
     delete_media_asset,
     get_media_asset,
@@ -262,6 +263,11 @@ def remove_media_asset(
             db,
             asset=asset,
         )
+    except MediaAssetInUseError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=str(exc),
+        ) from exc
     except R2ConfigurationError as exc:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,

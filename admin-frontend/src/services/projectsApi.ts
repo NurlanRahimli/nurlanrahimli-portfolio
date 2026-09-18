@@ -79,3 +79,64 @@ export async function createProjectVideoUpload(
 export async function deleteProjectVideo(projectId: number): Promise<void> {
   await api.delete(`/projects/${projectId}/video`);
 }
+
+export async function cancelProjectVideoReplacement(
+  projectId: number,
+): Promise<void> {
+  await api.delete(`/projects/${projectId}/video/replacement`);
+}
+
+export async function retryProjectVideoCleanup(
+  projectId: number,
+): Promise<void> {
+  await api.post(`/projects/${projectId}/video/cleanup/retry`);
+}
+
+export async function uploadProjectVideoToMux(
+  uploadUrl: string,
+  file: File,
+  onProgress?: (progress: number) => void,
+): Promise<void> {
+  await new Promise<void>((resolve, reject) => {
+    const request = new XMLHttpRequest();
+
+    request.open("PUT", uploadUrl);
+
+    request.setRequestHeader(
+      "Content-Type",
+      file.type || "application/octet-stream",
+    );
+
+    request.upload.addEventListener("progress", (event) => {
+      if (!event.lengthComputable) {
+        return;
+      }
+
+      onProgress?.(Math.round((event.loaded / event.total) * 100));
+    });
+
+    request.addEventListener("load", () => {
+      if (request.status >= 200 && request.status < 300) {
+        onProgress?.(100);
+        resolve();
+        return;
+      }
+
+      reject(
+        new Error(
+          `Video upload failed with status ${request.status || "unknown"}.`,
+        ),
+      );
+    });
+
+    request.addEventListener("error", () => {
+      reject(new Error("The video upload could not reach Mux."));
+    });
+
+    request.addEventListener("abort", () => {
+      reject(new Error("The video upload was cancelled."));
+    });
+
+    request.send(file);
+  });
+}

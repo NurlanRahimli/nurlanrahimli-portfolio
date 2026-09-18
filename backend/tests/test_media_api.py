@@ -428,3 +428,103 @@ def test_delete_media_removes_database_and_storage(
 
     assert remaining_variants == []
     assert fake_storage.objects == {}
+
+def test_delete_media_rejects_project_gallery_asset_without_touching_storage(
+    client: TestClient,
+    authenticated_headers: dict[str, str],
+    db_session: Session,
+    fake_storage: FakeStorage,
+) -> None:
+    upload_response = upload_test_image(
+        client,
+        authenticated_headers,
+    )
+
+    assert upload_response.status_code == 201
+
+    asset_id = upload_response.json()["id"]
+    asset = db_session.get(MediaAsset, asset_id)
+
+    assert asset is not None
+
+    from app.models.project import Project, ProjectImage
+
+    project = Project(
+        title="Protected Gallery Project",
+        slug="protected-gallery-project",
+        display_order=0,
+        is_published=False,
+        is_featured=False,
+    )
+    db_session.add(project)
+    db_session.flush()
+
+    project_image = ProjectImage(
+        project_id=project.id,
+        media_asset_id=asset.id,
+        display_order=0,
+    )
+    db_session.add(project_image)
+    db_session.commit()
+
+    stored_keys_before = set(fake_storage.objects.keys())
+
+    response = client.delete(
+        f"/api/v1/media/{asset_id}",
+        headers=authenticated_headers,
+    )
+
+    assert response.status_code == 409
+    assert response.json() == {
+        "detail": "This media asset is currently used as a project gallery image."
+    }
+
+    assert db_session.get(MediaAsset, asset_id) is not None
+    assert set(fake_storage.objects.keys()) == stored_keys_before
+
+
+def test_delete_media_rejects_project_cover_asset_without_touching_storage(
+    client: TestClient,
+    authenticated_headers: dict[str, str],
+    db_session: Session,
+    fake_storage: FakeStorage,
+) -> None:
+    upload_response = upload_test_image(
+        client,
+        authenticated_headers,
+    )
+
+    assert upload_response.status_code == 201
+
+    asset_id = upload_response.json()["id"]
+    asset = db_session.get(MediaAsset, asset_id)
+
+    assert asset is not None
+
+    from app.models.project import Project
+
+    project = Project(
+        title="Protected Cover Project",
+        slug="protected-cover-project",
+        cover_media_asset_id=asset.id,
+        display_order=0,
+        is_published=False,
+        is_featured=False,
+    )
+    db_session.add(project)
+    db_session.commit()
+
+    stored_keys_before = set(fake_storage.objects.keys())
+
+    response = client.delete(
+        f"/api/v1/media/{asset_id}",
+        headers=authenticated_headers,
+    )
+
+    assert response.status_code == 409
+    assert response.json() == {
+        "detail": "This media asset is currently used as a project cover image."
+    }
+
+    assert db_session.get(MediaAsset, asset_id) is not None
+    assert set(fake_storage.objects.keys()) == stored_keys_before
