@@ -32,7 +32,7 @@ export const adminNavigation: AdminNavigationItem[] = [
     label: "Projects",
     path: "/projects",
     icon: FolderKanban,
-    available: false,
+    available: true,
   },
   {
     label: "Resume",
