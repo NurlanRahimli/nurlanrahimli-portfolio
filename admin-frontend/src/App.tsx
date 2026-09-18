@@ -1,12 +1,9 @@
-import {
-  Navigate,
-  Route,
-  Routes,
-} from 'react-router-dom'
-
-import { ProtectedRoute } from './components/auth/ProtectedRoute'
-import { DashboardPage } from './pages/DashboardPage'
-import { LoginPage } from './pages/LoginPage'
+import { Navigate, Route, Routes } from "react-router-dom";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import { AdminLayout } from "./components/layout/AdminLayout";
+import { DashboardPage } from "./pages/DashboardPage";
+import { LoginPage } from "./pages/LoginPage";
+import { MediaLibraryPage } from "./pages/MediaLibraryPage";
 
 export default function App() {
   return (
@@ -14,10 +11,13 @@ export default function App() {
       <Route path="/login" element={<LoginPage />} />
 
       <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<DashboardPage />} />
+        <Route element={<AdminLayout />}>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/media" element={<MediaLibraryPage />} />
+        </Route>
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-  )
+  );
 }

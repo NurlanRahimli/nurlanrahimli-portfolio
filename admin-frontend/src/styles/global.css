@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
 
 :root {
-  font-family: 'Manrope', sans-serif;
+  font-family: "Manrope", sans-serif;
   color: #f7f7f5;
   background: #090a0c;
   font-synthesis: none;
@@ -59,7 +59,11 @@ input:disabled {
   min-height: 100vh;
   overflow: hidden;
   background:
-    radial-gradient(circle at 16% 15%, rgba(216, 255, 82, 0.08), transparent 28%),
+    radial-gradient(
+      circle at 16% 15%,
+      rgba(216, 255, 82, 0.08),
+      transparent 28%
+    ),
     linear-gradient(135deg, #0b0c0e 0%, #08090a 60%, #0d0e10 100%);
 }
 
@@ -369,7 +373,11 @@ input:disabled {
   min-height: 100vh;
   padding: 32px;
   background:
-    radial-gradient(circle at 10% 0%, rgba(216, 255, 82, 0.06), transparent 25%),
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(216, 255, 82, 0.06),
+      transparent 25%
+    ),
     var(--background);
 }
 
@@ -629,4 +637,79 @@ input:disabled {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Admin theme system */
+
+:root,
+:root[data-theme="dark"] {
+  --admin-bg: #090a0c;
+  --admin-sidebar: #0d0e10;
+  --admin-surface: #111215;
+  --admin-surface-raised: #17181c;
+  --admin-surface-soft: rgba(255, 255, 255, 0.035);
+  --admin-border: rgba(255, 255, 255, 0.09);
+  --admin-border-strong: rgba(255, 255, 255, 0.14);
+  --admin-text: #f7f7f5;
+  --admin-text-secondary: #a0a3aa;
+  --admin-text-muted: #6f7279;
+  --admin-accent: #d8ff52;
+  --admin-accent-text: #101407;
+  --admin-danger: #ff8d8d;
+  --admin-overlay: rgba(3, 4, 5, 0.7);
+  --admin-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+
+  --background: var(--admin-bg);
+  --surface: var(--admin-surface);
+  --surface-strong: var(--admin-surface-raised);
+  --border: var(--admin-border);
+  --muted: var(--admin-text-secondary);
+  --text: var(--admin-text);
+  --accent: var(--admin-accent);
+  --accent-dark: var(--admin-accent-text);
+  --danger: var(--admin-danger);
+
+  color: var(--admin-text);
+  background: var(--admin-bg);
+}
+
+:root[data-theme="light"] {
+  --admin-bg: #f4f5f1;
+  --admin-sidebar: #ffffff;
+  --admin-surface: #ffffff;
+  --admin-surface-raised: #f8f9f5;
+  --admin-surface-soft: rgba(15, 18, 12, 0.035);
+  --admin-border: rgba(19, 22, 16, 0.1);
+  --admin-border-strong: rgba(19, 22, 16, 0.16);
+  --admin-text: #171916;
+  --admin-text-secondary: #656961;
+  --admin-text-muted: #92978d;
+  --admin-accent: #b9e532;
+  --admin-accent-text: #151b06;
+  --admin-danger: #c84545;
+  --admin-overlay: rgba(17, 20, 14, 0.42);
+  --admin-shadow: 0 24px 60px rgba(36, 40, 29, 0.08);
+
+  --background: var(--admin-bg);
+  --surface: var(--admin-surface);
+  --surface-strong: var(--admin-surface-raised);
+  --border: var(--admin-border);
+  --muted: var(--admin-text-secondary);
+  --text: var(--admin-text);
+  --accent: var(--admin-accent);
+  --accent-dark: var(--admin-accent-text);
+  --danger: var(--admin-danger);
+
+  color: var(--admin-text);
+  background: var(--admin-bg);
+}
+
+html,
+body,
+#root {
+  background: var(--admin-bg);
+  color: var(--admin-text);
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
 }
