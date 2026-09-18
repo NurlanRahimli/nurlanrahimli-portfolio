@@ -1,85 +1,167 @@
-import { motion } from 'framer-motion'
-import {
-  ArrowUpRight,
-  FolderKanban,
-  LogOut,
-  ShieldCheck,
-} from 'lucide-react'
+import { motion } from "framer-motion";
+import { ArrowRight, FileText, FolderKanban, Image, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
-import { useAuth } from '../context/authContext'
+const overviewItems = [
+  {
+    label: "Projects",
+    value: "Next",
+    detail: "Project management",
+    icon: FolderKanban,
+  },
+  {
+    label: "Media",
+    value: "Ready",
+    detail: "R2 media storage",
+    icon: Image,
+  },
+  {
+    label: "Resume",
+    value: "Planned",
+    detail: "Experience & skills",
+    icon: FileText,
+  },
+  {
+    label: "Inquiries",
+    value: "Planned",
+    detail: "Contact submissions",
+    icon: Mail,
+  },
+];
 
 export function DashboardPage() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth();
 
   return (
-    <main className="dashboard-page">
-      <motion.div
-        className="dashboard-shell"
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <header className="dashboard-header">
-          <div className="dashboard-brand">
-            <div className="brand-mark brand-mark--small">
-              NR
-            </div>
+    <motion.div
+      className="admin-page"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <section className="dashboard-hero">
+        <div>
+          <span className="admin-eyebrow">Control Center</span>
 
-            <div>
-              <span>Portfolio administration</span>
-              <strong>Nurlan Rahimli</strong>
-            </div>
-          </div>
-
-          <button
-            className="logout-button"
-            type="button"
-            onClick={logout}
-          >
-            <LogOut size={18} />
-            Log out
-          </button>
-        </header>
-
-        <section className="dashboard-welcome">
-          <span className="login-eyebrow">
-            <ShieldCheck size={17} />
-            Authenticated
-          </span>
-
-          <h1>Welcome to your dashboard.</h1>
+          <h1>Welcome back, Nurlan.</h1>
 
           <p>
-            Authentication is connected successfully. The full
-            portfolio management dashboard will be built next.
+            Manage the content and media powering your portfolio from one
+            workspace.
+          </p>
+        </div>
+
+        <div className="dashboard-hero__account">
+          <span>Signed in as</span>
+          <strong>{user?.email}</strong>
+          <small>Super administrator</small>
+        </div>
+      </section>
+
+      <section className="dashboard-overview" aria-label="Portfolio overview">
+        {overviewItems.map((item, index) => {
+          const Icon = item.icon;
+
+          return (
+            <motion.article
+              className="overview-card"
+              key={item.label}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.35,
+                delay: 0.05 + index * 0.05,
+              }}
+            >
+              <div className="overview-card__icon">
+                <Icon size={22} />
+              </div>
+
+              <div>
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+                <small>{item.detail}</small>
+              </div>
+            </motion.article>
+          );
+        })}
+      </section>
+
+      <section className="dashboard-grid">
+        <article className="dashboard-panel dashboard-panel--featured">
+          <div className="dashboard-panel__heading">
+            <div>
+              <span className="admin-eyebrow">Available now</span>
+              <h2>Media Library</h2>
+            </div>
+
+            <div className="dashboard-panel__icon">
+              <Image size={24} />
+            </div>
+          </div>
+
+          <p>
+            Upload and manage portfolio images and PDF documents stored securely
+            in Cloudflare R2.
           </p>
 
-          <div className="dashboard-user">
-            <div>
-              <span>Signed in as</span>
-              <strong>{user?.email}</strong>
-            </div>
+          <div className="dashboard-panel__features">
+            <span>Image optimization</span>
+            <span>WebP variants</span>
+            <span>PDF documents</span>
+            <span>Alt text</span>
+          </div>
 
+          <Link className="admin-primary-action" to="/media">
+            Open Media Library
+            <ArrowRight size={19} />
+          </Link>
+        </article>
+
+        <article className="dashboard-panel">
+          <div className="dashboard-panel__heading">
             <div>
-              <span>Account</span>
-              <strong>Super admin</strong>
+              <span className="admin-eyebrow">Build progress</span>
+              <h2>Management modules</h2>
             </div>
           </div>
 
-          <div className="dashboard-placeholder">
-            <FolderKanban size={26} />
-
+          <div className="dashboard-progress-list">
             <div>
-              <strong>Management modules coming next</strong>
               <span>
-                Projects, media, resume, profile and contact.
+                <i className="status-dot status-dot--ready" />
+                Authentication
               </span>
+              <strong>Ready</strong>
             </div>
 
-            <ArrowUpRight size={22} />
+            <div>
+              <span>
+                <i className="status-dot status-dot--ready" />
+                Media Library
+              </span>
+              <strong>Backend ready</strong>
+            </div>
+
+            <div>
+              <span>
+                <i className="status-dot" />
+                Projects
+              </span>
+              <strong>Next phase</strong>
+            </div>
+
+            <div>
+              <span>
+                <i className="status-dot" />
+                Resume & Content
+              </span>
+              <strong>Planned</strong>
+            </div>
           </div>
-        </section>
-      </motion.div>
-    </main>
-  )
+        </article>
+      </section>
+    </motion.div>
+  );
 }
