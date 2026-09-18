@@ -8,6 +8,7 @@ import { ToastProvider } from "./context/ToastProvider";
 import "./styles/global.css";
 import "./styles/admin-shell.css";
 import "./styles/media-library.css";
+import "./styles/projects.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

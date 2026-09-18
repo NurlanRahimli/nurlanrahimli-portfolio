@@ -26,6 +26,11 @@ class Settings(BaseSettings):
     r2_bucket_name: str = ""
     r2_public_base_url: str = ""
 
+    mux_token_id: str = ""
+    mux_token_secret: str = ""
+    mux_webhook_secret: str = ""
+    mux_upload_cors_origin: str = "http://localhost:5174"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
