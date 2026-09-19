@@ -10,6 +10,7 @@ from app.models.project import Project, ProjectImage
 from app.models.about import AboutContent
 from app.models.testimonial import Testimonial
 from app.models.skill import Skill
+from app.models.education import Education
 from app.services.image_processing import create_image_variants
 from app.services.media_validation import ValidatedMedia, validate_media
 from app.services.r2_storage import R2Storage, r2_storage
@@ -295,12 +296,19 @@ def get_media_asset_usages(
         usages.append("the About resume document")
 
     skill_logo = db.scalar(
-        select(Skill.id)
-        .where(Skill.media_asset_id == asset_id)
-        .limit(1)
+        select(Skill.id).where(Skill.media_asset_id == asset_id).limit(1)
     )
     if skill_logo is not None:
         usages.append("a skill logo")
+
+    education_certificate = db.scalar(
+        select(Education.id)
+        .where(Education.certification_media_asset_id == asset_id)
+        .limit(1)
+    )
+
+    if education_certificate is not None:
+        usages.append("an education certification document")
 
     return usages
 

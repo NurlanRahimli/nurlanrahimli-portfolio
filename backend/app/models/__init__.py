@@ -4,6 +4,7 @@ from app.models.media import MediaAsset, MediaVariant
 
 __all__ = [
     "ExperienceHighlight",
+    "Education",
     "Experience",
     "ContactContent",
     "AboutSoftwareField",
@@ -42,3 +43,4 @@ from app.models.skill import Skill
 from app.models.contact import ContactContent
 
 from app.models.experience import Experience, ExperienceHighlight
+from app.models.education import Education
