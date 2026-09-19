@@ -22,7 +22,7 @@ import { listMedia, uploadMedia } from "../../services/mediaApi";
 import type { MediaAsset, MediaFileType } from "../../types/media";
 import { formatFileSize, getMediaPreviewUrl } from "../media/mediaUtils";
 
-type ContentMediaPickerMode = "profile" | "resume" | "skill";
+type ContentMediaPickerMode = "profile" | "resume" | "skill" | "education";
 
 interface ContentMediaPickerProps {
   isOpen: boolean;
@@ -64,6 +64,10 @@ function isValidUpload(file: File, mode: ContentMediaPickerMode): boolean {
     return file.type.startsWith("image/");
   }
 
+  if (mode === "education") {
+    return file.type === "application/pdf";
+  }
+
   return (
     file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
   );
@@ -89,6 +93,7 @@ export function ContentMediaPicker({
 
   const isProfile = mode === "profile";
   const isSkill = mode === "skill";
+  const isEducation = mode === "education";
   const isImageMode = isProfile || isSkill;
   const fileType: MediaFileType = isImageMode ? "image" : "document";
 
@@ -181,7 +186,9 @@ export function ContentMediaPicker({
           ? "Skill logos must be image files."
           : isProfile
             ? "Profile photos must be image files."
-            : "Your résumé must be uploaded as a PDF document.",
+            : isEducation
+              ? "Education certificates must be PDF documents."
+              : "Your résumé must be uploaded as a PDF document.",
       });
       return;
     }
@@ -200,10 +207,16 @@ export function ContentMediaPicker({
 
       if (
         !isImageMode &&
-        uploaded.mime_type !== "application/pdf" &&
-        !uploaded.original_filename.toLowerCase().endsWith(".pdf")
+        (isEducation
+          ? uploaded.mime_type !== "application/pdf"
+          : uploaded.mime_type !== "application/pdf" &&
+            !uploaded.original_filename.toLowerCase().endsWith(".pdf"))
       ) {
-        throw new Error("The uploaded résumé is not a PDF.");
+        throw new Error(
+          isEducation
+            ? "The uploaded certificate is not a PDF."
+            : "The uploaded résumé is not a PDF.",
+        );
       }
 
       setSearch("");
@@ -220,7 +233,9 @@ export function ContentMediaPicker({
           ? "Logo uploaded"
           : isProfile
             ? "Photo uploaded"
-            : "Résumé uploaded",
+            : isEducation
+              ? "Certificate uploaded"
+              : "Résumé uploaded",
         message: `${uploaded.original_filename} was uploaded to Media Library and selected.`,
       });
     } catch (error) {
@@ -230,7 +245,9 @@ export function ContentMediaPicker({
           ? "Could not upload logo"
           : isProfile
             ? "Could not upload photo"
-            : "Could not upload résumé",
+            : isEducation
+              ? "Could not upload certificate"
+              : "Could not upload résumé",
         message: getErrorMessage(error),
       });
     } finally {
@@ -262,13 +279,17 @@ export function ContentMediaPicker({
     ? "Choose skill logo"
     : isProfile
       ? "Choose profile image"
-      : "Choose résumé";
+      : isEducation
+        ? "Choose certificate"
+        : "Choose résumé";
 
   const description = isSkill
     ? "Select an existing technology logo or upload a new image to your Media Library."
     : isProfile
       ? "Select an existing portrait or upload a new image to your Media Library."
-      : "Select an existing PDF or upload a new résumé to your Media Library.";
+      : isEducation
+        ? "Select an existing PDF or upload a new education certificate to your Media Library."
+        : "Select an existing PDF or upload a new résumé to your Media Library.";
 
   return (
     <AnimatePresence>
@@ -384,7 +405,9 @@ export function ContentMediaPicker({
                         ? "Upload a technology logo to get started."
                         : isProfile
                           ? "Upload a profile image to get started."
-                          : "Upload your résumé PDF to get started."}
+                          : isEducation
+                            ? "Upload an education certificate PDF to get started."
+                            : "Upload your résumé PDF to get started."}
                   </span>
                 </div>
               ) : (

@@ -11,6 +11,7 @@ import "./styles/media-library.css";
 import "./styles/projects.css";
 import "./styles/testimonials.css";
 import "./styles/experiences.css";
+import "./styles/educations.css";
 import "./styles/website-content.css";
 
 createRoot(document.getElementById("root")!).render(

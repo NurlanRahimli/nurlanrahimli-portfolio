@@ -1,5 +1,6 @@
 import {
   BriefcaseBusiness,
+  GraduationCap,
   FolderKanban,
   Image,
   LayoutDashboard,
@@ -45,6 +46,12 @@ export const adminNavigation: AdminNavigationItem[] = [
     label: "Experience",
     path: "/experiences",
     icon: BriefcaseBusiness,
+    available: true,
+  },
+  {
+    label: "Education",
+    path: "/educations",
+    icon: GraduationCap,
     available: true,
   },
   {
