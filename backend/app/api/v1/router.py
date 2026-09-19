@@ -1,3 +1,5 @@
+from app.api.v1.services import router as services_router
+from app.api.v1.public_services import router as public_services_router
 from app.api.v1.about import router as about_router
 from app.api.v1.public_about import router as public_about_router
 from fastapi import APIRouter
@@ -22,3 +24,5 @@ api_router.include_router(projects_router)
 api_router.include_router(public_projects_router)
 api_router.include_router(testimonials_router)
 api_router.include_router(public_testimonials_router)
+api_router.include_router(services_router)
+api_router.include_router(public_services_router)

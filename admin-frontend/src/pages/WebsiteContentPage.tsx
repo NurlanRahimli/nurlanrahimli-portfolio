@@ -28,6 +28,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AboutRichTextEditor } from "../components/content/AboutRichTextEditor";
 import { ContentMediaPicker } from "../components/content/ContentMediaPicker";
+import { ServicesContentPanel } from "../components/content/ServicesContentPanel";
 import { useToast } from "../context/toastContext";
 import { getAboutContent, updateAboutContent } from "../services/aboutApi";
 import type { MediaAsset } from "../types/media";
@@ -605,7 +606,7 @@ export default function WebsiteContentPage() {
 
       <nav className="website-content-tabs" aria-label="Website content">
         {CONTENT_TABS.map((tab) => {
-          const available = tab.id === "about";
+          const available = tab.id === "about" || tab.id === "services";
 
           return (
             <button
@@ -1189,6 +1190,8 @@ export default function WebsiteContentPage() {
           </motion.div>
         )
       ) : null}
+      {activeTab === "services" ? <ServicesContentPanel /> : null}
+
       <ContentMediaPicker
         isOpen={mediaPickerMode !== null}
         mode={mediaPickerMode ?? "profile"}

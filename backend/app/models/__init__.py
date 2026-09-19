@@ -16,6 +16,7 @@ __all__ = [
     "ProjectTechGroup",
     "ProjectTechItem",
     "ProjectVideo",
+    "Service",
     "Testimonial",
 ]
 from app.models.project import (
@@ -29,3 +30,5 @@ from app.models.project import (
 )
 
 from app.models.testimonial import Testimonial
+
+from app.models.service import Service
