@@ -1,3 +1,5 @@
+from app.api.v1.experiences import router as experiences_router
+from app.api.v1.public_experiences import router as public_experiences_router
 from app.api.v1.contact import router as contact_router
 from app.api.v1.public_contact import router as public_contact_router
 from app.api.v1.services import router as services_router
@@ -35,3 +37,6 @@ api_router.include_router(public_skills_router)
 
 api_router.include_router(contact_router)
 api_router.include_router(public_contact_router)
+
+api_router.include_router(experiences_router)
+api_router.include_router(public_experiences_router)

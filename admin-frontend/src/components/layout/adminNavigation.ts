@@ -1,4 +1,5 @@
 import {
+  BriefcaseBusiness,
   FolderKanban,
   Image,
   LayoutDashboard,
@@ -38,6 +39,12 @@ export const adminNavigation: AdminNavigationItem[] = [
     label: "Testimonials",
     path: "/testimonials",
     icon: MessageSquareQuote,
+    available: true,
+  },
+  {
+    label: "Experience",
+    path: "/experiences",
+    icon: BriefcaseBusiness,
     available: true,
   },
   {
