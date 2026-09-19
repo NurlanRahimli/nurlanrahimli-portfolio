@@ -7,6 +7,7 @@ import { MediaLibraryPage } from "./pages/MediaLibraryPage";
 import ProjectEditorPage from "./pages/ProjectEditorPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import TestimonialsPage from "./pages/TestimonialsPage";
+import WebsiteContentPage from "./pages/WebsiteContentPage";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/media" element={<MediaLibraryPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/testimonials" element={<TestimonialsPage />} />
+          <Route path="/content" element={<WebsiteContentPage />} />
           <Route path="/projects/:projectId" element={<ProjectEditorPage />} />
         </Route>
       </Route>

@@ -1,5 +1,4 @@
 import {
-  FileText,
   FolderKanban,
   Image,
   LayoutDashboard,
@@ -42,16 +41,10 @@ export const adminNavigation: AdminNavigationItem[] = [
     available: true,
   },
   {
-    label: "Resume",
-    path: "/resume",
-    icon: FileText,
-    available: false,
-  },
-  {
     label: "Website Content",
     path: "/content",
     icon: PanelsTopLeft,
-    available: false,
+    available: true,
   },
   {
     label: "Contact Inquiries",

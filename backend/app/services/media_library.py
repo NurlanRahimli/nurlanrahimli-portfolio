@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.models.media import MediaAsset, MediaVariant
 from app.models.project import Project, ProjectImage
+from app.models.about import AboutContent
 from app.models.testimonial import Testimonial
 from app.services.image_processing import create_image_variants
 from app.services.media_validation import ValidatedMedia, validate_media
@@ -275,6 +276,22 @@ def get_media_asset_usages(
 
     if testimonial_profile is not None:
         usages.append("a testimonial profile image")
+
+    about_profile = db.scalar(
+        select(AboutContent.id)
+        .where(AboutContent.profile_media_asset_id == asset_id)
+        .limit(1)
+    )
+    if about_profile is not None:
+        usages.append("the About profile image")
+
+    about_resume = db.scalar(
+        select(AboutContent.id)
+        .where(AboutContent.resume_media_asset_id == asset_id)
+        .limit(1)
+    )
+    if about_resume is not None:
+        usages.append("the About resume document")
 
     return usages
 
