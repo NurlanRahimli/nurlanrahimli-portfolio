@@ -30,6 +30,7 @@ import { AboutRichTextEditor } from "../components/content/AboutRichTextEditor";
 import { ContentMediaPicker } from "../components/content/ContentMediaPicker";
 import { SkillsContentPanel } from "../components/content/SkillsContentPanel";
 import { ServicesContentPanel } from "../components/content/ServicesContentPanel";
+import { ContactContentPanel } from "../components/content/ContactContentPanel";
 import { useToast } from "../context/toastContext";
 import { getAboutContent, updateAboutContent } from "../services/aboutApi";
 import type { MediaAsset } from "../types/media";
@@ -608,7 +609,10 @@ export default function WebsiteContentPage() {
       <nav className="website-content-tabs" aria-label="Website content">
         {CONTENT_TABS.map((tab) => {
           const available =
-            tab.id === "about" || tab.id === "skills" || tab.id === "services";
+            tab.id === "about" ||
+            tab.id === "skills" ||
+            tab.id === "services" ||
+            tab.id === "contact";
 
           return (
             <button
@@ -1194,6 +1198,7 @@ export default function WebsiteContentPage() {
       ) : null}
       {activeTab === "skills" ? <SkillsContentPanel /> : null}
       {activeTab === "services" ? <ServicesContentPanel /> : null}
+      {activeTab === "contact" ? <ContactContentPanel /> : null}
 
       <ContentMediaPicker
         isOpen={mediaPickerMode !== null}
