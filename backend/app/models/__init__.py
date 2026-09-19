@@ -3,6 +3,8 @@ from app.models.admin_user import AdminUser
 from app.models.media import MediaAsset, MediaVariant
 
 __all__ = [
+    "ExperienceHighlight",
+    "Experience",
     "ContactContent",
     "AboutSoftwareField",
     "AboutSocialLink",
@@ -38,3 +40,5 @@ from app.models.service import Service
 from app.models.skill import Skill
 
 from app.models.contact import ContactContent
+
+from app.models.experience import Experience, ExperienceHighlight
