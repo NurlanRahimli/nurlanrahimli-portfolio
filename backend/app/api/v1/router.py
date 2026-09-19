@@ -1,3 +1,5 @@
+from app.api.v1.about import router as about_router
+from app.api.v1.public_about import router as public_about_router
 from fastapi import APIRouter
 
 from app.api.v1.auth import router as auth_router
@@ -10,6 +12,8 @@ from app.api.v1.public_testimonials import router as public_testimonials_router
 from app.api.v1.testimonials import router as testimonials_router
 
 api_router = APIRouter()
+api_router.include_router(about_router)
+api_router.include_router(public_about_router)
 api_router.include_router(health_router)
 api_router.include_router(auth_router)
 api_router.include_router(media_router)

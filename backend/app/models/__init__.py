@@ -1,7 +1,11 @@
+from app.models.about import AboutContent, AboutSocialLink, AboutSoftwareField
 from app.models.admin_user import AdminUser
 from app.models.media import MediaAsset, MediaVariant
 
 __all__ = [
+    "AboutSoftwareField",
+    "AboutSocialLink",
+    "AboutContent",
     "AdminUser",
     "MediaAsset",
     "MediaVariant",
