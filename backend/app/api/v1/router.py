@@ -1,3 +1,5 @@
+from app.api.v1.contact import router as contact_router
+from app.api.v1.public_contact import router as public_contact_router
 from app.api.v1.services import router as services_router
 from app.api.v1.skills import router as skills_router
 from app.api.v1.public_services import router as public_services_router
@@ -30,3 +32,6 @@ api_router.include_router(services_router)
 api_router.include_router(skills_router)
 api_router.include_router(public_services_router)
 api_router.include_router(public_skills_router)
+
+api_router.include_router(contact_router)
+api_router.include_router(public_contact_router)
