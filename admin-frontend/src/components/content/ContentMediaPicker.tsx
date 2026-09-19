@@ -22,7 +22,7 @@ import { listMedia, uploadMedia } from "../../services/mediaApi";
 import type { MediaAsset, MediaFileType } from "../../types/media";
 import { formatFileSize, getMediaPreviewUrl } from "../media/mediaUtils";
 
-type ContentMediaPickerMode = "profile" | "resume";
+type ContentMediaPickerMode = "profile" | "resume" | "skill";
 
 interface ContentMediaPickerProps {
   isOpen: boolean;
@@ -60,7 +60,7 @@ function getErrorMessage(error: unknown): string {
 }
 
 function isValidUpload(file: File, mode: ContentMediaPickerMode): boolean {
-  if (mode === "profile") {
+  if (mode === "profile" || mode === "skill") {
     return file.type.startsWith("image/");
   }
 
@@ -88,7 +88,9 @@ export function ContentMediaPicker({
   const uploadInputRef = useRef<HTMLInputElement>(null);
 
   const isProfile = mode === "profile";
-  const fileType: MediaFileType = isProfile ? "image" : "document";
+  const isSkill = mode === "skill";
+  const isImageMode = isProfile || isSkill;
+  const fileType: MediaFileType = isImageMode ? "image" : "document";
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -109,7 +111,7 @@ export function ContentMediaPicker({
         offset: 0,
       });
 
-      const filteredAssets = isProfile
+      const filteredAssets = isImageMode
         ? result.items
         : result.items.filter(
             (asset) =>
@@ -127,7 +129,7 @@ export function ContentMediaPicker({
     } finally {
       setIsLoading(false);
     }
-  }, [debouncedSearch, fileType, isProfile, showToast]);
+  }, [debouncedSearch, fileType, isImageMode, showToast]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -174,10 +176,12 @@ export function ContentMediaPicker({
     if (!isValidUpload(file, mode)) {
       showToast({
         type: "error",
-        title: isProfile ? "Images only" : "PDF required",
-        message: isProfile
-          ? "Profile photos must be image files."
-          : "Your résumé must be uploaded as a PDF document.",
+        title: isImageMode ? "Images only" : "PDF required",
+        message: isSkill
+          ? "Skill logos must be image files."
+          : isProfile
+            ? "Profile photos must be image files."
+            : "Your résumé must be uploaded as a PDF document.",
       });
       return;
     }
@@ -188,14 +192,14 @@ export function ContentMediaPicker({
       const uploaded = await uploadMedia(file);
 
       if (
-        (!isProfile && uploaded.file_type !== "document") ||
-        (isProfile && uploaded.file_type !== "image")
+        (!isImageMode && uploaded.file_type !== "document") ||
+        (isImageMode && uploaded.file_type !== "image")
       ) {
         throw new Error("The uploaded asset has an unexpected file type.");
       }
 
       if (
-        !isProfile &&
+        !isImageMode &&
         uploaded.mime_type !== "application/pdf" &&
         !uploaded.original_filename.toLowerCase().endsWith(".pdf")
       ) {
@@ -212,13 +216,21 @@ export function ContentMediaPicker({
 
       showToast({
         type: "success",
-        title: isProfile ? "Photo uploaded" : "Résumé uploaded",
+        title: isSkill
+          ? "Logo uploaded"
+          : isProfile
+            ? "Photo uploaded"
+            : "Résumé uploaded",
         message: `${uploaded.original_filename} was uploaded to Media Library and selected.`,
       });
     } catch (error) {
       showToast({
         type: "error",
-        title: isProfile ? "Could not upload photo" : "Could not upload résumé",
+        title: isSkill
+          ? "Could not upload logo"
+          : isProfile
+            ? "Could not upload photo"
+            : "Could not upload résumé",
         message: getErrorMessage(error),
       });
     } finally {
@@ -246,10 +258,17 @@ export function ContentMediaPicker({
     onClose();
   }
 
-  const title = isProfile ? "Choose profile image" : "Choose résumé";
-  const description = isProfile
-    ? "Select an existing portrait or upload a new image to your Media Library."
-    : "Select an existing PDF or upload a new résumé to your Media Library.";
+  const title = isSkill
+    ? "Choose skill logo"
+    : isProfile
+      ? "Choose profile image"
+      : "Choose résumé";
+
+  const description = isSkill
+    ? "Select an existing technology logo or upload a new image to your Media Library."
+    : isProfile
+      ? "Select an existing portrait or upload a new image to your Media Library."
+      : "Select an existing PDF or upload a new résumé to your Media Library.";
 
   return (
     <AnimatePresence>
@@ -301,7 +320,7 @@ export function ContentMediaPicker({
                   type="search"
                   value={search}
                   placeholder={
-                    isProfile ? "Search images..." : "Search PDFs..."
+                    isImageMode ? "Search images..." : "Search PDFs..."
                   }
                   onChange={(event) => setSearch(event.target.value)}
                 />
@@ -311,7 +330,7 @@ export function ContentMediaPicker({
                 ref={uploadInputRef}
                 type="file"
                 accept={
-                  isProfile
+                  isImageMode
                     ? "image/jpeg,image/png,image/webp,image/avif"
                     : "application/pdf,.pdf"
                 }
@@ -343,27 +362,35 @@ export function ContentMediaPicker({
               {isLoading ? (
                 <div className="content-media-picker__state">
                   <LoaderCircle className="about-spin" size={30} />
-                  <strong>Loading {isProfile ? "images" : "documents"}</strong>
+                  <strong>
+                    Loading {isImageMode ? "images" : "documents"}
+                  </strong>
                   <span>Fetching your Media Library…</span>
                 </div>
               ) : assets.length === 0 ? (
                 <div className="content-media-picker__state">
-                  {isProfile ? <ImageIcon size={34} /> : <FileText size={34} />}
+                  {isImageMode ? (
+                    <ImageIcon size={34} />
+                  ) : (
+                    <FileText size={34} />
+                  )}
 
-                  <strong>No {isProfile ? "images" : "PDFs"} found</strong>
+                  <strong>No {isImageMode ? "images" : "PDFs"} found</strong>
 
                   <span>
                     {debouncedSearch
                       ? "Try a different search."
-                      : isProfile
-                        ? "Upload a profile image to get started."
-                        : "Upload your résumé PDF to get started."}
+                      : isSkill
+                        ? "Upload a technology logo to get started."
+                        : isProfile
+                          ? "Upload a profile image to get started."
+                          : "Upload your résumé PDF to get started."}
                   </span>
                 </div>
               ) : (
                 <div
                   className={
-                    isProfile
+                    isImageMode
                       ? "content-media-picker__grid"
                       : "content-media-picker__documents"
                   }
@@ -381,13 +408,13 @@ export function ContentMediaPicker({
                             ? " content-media-picker__asset--selected"
                             : ""
                         }${
-                          !isProfile
+                          !isImageMode
                             ? " content-media-picker__asset--document"
                             : ""
                         }`}
                         onClick={() => setPendingId(asset.id)}
                       >
-                        {isProfile ? (
+                        {isImageMode ? (
                           <div className="content-media-picker__asset-preview">
                             {preview ? (
                               <img
